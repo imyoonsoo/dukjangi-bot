@@ -1,0 +1,3 @@
+// 덕장이 성격/말투/역할
+// TODO: SYSTEM_PROMPT, THINKING_MESSAGE, ERROR_MESSAGE
+export {};

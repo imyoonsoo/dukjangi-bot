@@ -1,0 +1,3 @@
+// 카카오 요청 파싱 & 응답 JSON 포맷
+// TODO: extractUtterance, extractCallbackUrl, simpleText, useCallback ...
+export {};
