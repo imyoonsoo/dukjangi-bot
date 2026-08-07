@@ -1,0 +1,48 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review, reopened]
+
+jobs:
+  claude-review:
+    # feature / fix / refactor 브랜치의 PR을 리뷰한다 (chore·docs·ci·release 등은 제외).
+    # 모든 PR을 리뷰하려면 아래 if 블록을 통째로 지우면 된다.
+    # 컨벤션 문서(conventions/)가 정해지면 프롬프트에 "먼저 conventions/ 읽기" 단계를 추가할 예정.
+    if: |
+      startsWith(github.head_ref, 'feature/') ||
+      startsWith(github.head_ref, 'fix/') ||
+      startsWith(github.head_ref, 'refactor/')
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code Review
+        id: claude-review
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          show_full_output: true
+          claude_args: '--allowed-tools "Read,Grep,Glob,Bash(gh pr comment:),Bash(gh pr review:)"'
+          prompt: |
+            이 PR을 리뷰해줘. (아직 프로젝트 컨벤션 문서가 없으니 일반적인 코드 품질 기준으로 본다.)
+            1. 이번 PR(${{ github.repository }}/pull/${{ github.event.pull_request.number }})에서 변경된 코드를 확인해.
+            2. 버그, 성능, 보안, 가독성 측면에서 문제점이나 개선점이 있으면 구체적으로 짚어줘 (파일명, 라인 포함).
+            3. 심각도별로 정리해서 알려줘 (Critical / Warning / Suggestion).
+            4. 리뷰 결과를 아래 두 가지 방식으로 모두 남겨줘.
+               - 먼저 `gh pr comment ${{ github.event.pull_request.number }} --body "..."` 명령으로 상세 리뷰 내용을 일반 댓글로 남기고,
+               - 이어서 Critical 이슈가 있으면 `gh pr review ${{ github.event.pull_request.number }} --request-changes --body "요약"`,
+                 없으면 `gh pr review ${{ github.event.pull_request.number }} --comment --body "요약"` 명령으로 정식 리뷰도 제출해줘.
+                 (정식 리뷰는 짧은 요약만, 상세 내용은 댓글에)
+          # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
