@@ -6,22 +6,13 @@ on:
 
 jobs:
   claude-review:
-    # feature / fix / refactor 브랜치의 PR을 리뷰한다 (chore·docs·ci·release 등은 제외).
-    # 모든 PR을 리뷰하려면 아래 if 블록을 통째로 지우면 된다.
-    # 컨벤션 문서(conventions/)가 정해지면 프롬프트에 "먼저 conventions/ 읽기" 단계를 추가할 예정.
-    if: |
-      startsWith(github.head_ref, 'feature/') ||
-      startsWith(github.head_ref, 'fix/') ||
-      startsWith(github.head_ref, 'refactor/')
-
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     permissions:
       contents: read
       pull-requests: write
       issues: write
       id-token: write
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -29,20 +20,56 @@ jobs:
           fetch-depth: 1
 
       - name: Run Claude Code Review
-        id: claude-review
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          show_full_output: true
-          claude_args: '--allowed-tools "Read,Grep,Glob,Bash(gh pr comment:),Bash(gh pr review:)"'
           prompt: |
-            이 PR을 리뷰해줘. (아직 프로젝트 컨벤션 문서가 없으니 일반적인 코드 품질 기준으로 본다.)
-            1. 이번 PR(${{ github.repository }}/pull/${{ github.event.pull_request.number }})에서 변경된 코드를 확인해.
-            2. 버그, 성능, 보안, 가독성 측면에서 문제점이나 개선점이 있으면 구체적으로 짚어줘 (파일명, 라인 포함).
-            3. 심각도별로 정리해서 알려줘 (Critical / Warning / Suggestion).
-            4. 리뷰 결과를 아래 두 가지 방식으로 모두 남겨줘.
-               - 먼저 `gh pr comment ${{ github.event.pull_request.number }} --body "..."` 명령으로 상세 리뷰 내용을 일반 댓글로 남기고,
-               - 이어서 Critical 이슈가 있으면 `gh pr review ${{ github.event.pull_request.number }} --request-changes --body "요약"`,
-                 없으면 `gh pr review ${{ github.event.pull_request.number }} --comment --body "요약"` 명령으로 정식 리뷰도 제출해줘.
-                 (정식 리뷰는 짧은 요약만, 상세 내용은 댓글에)
-          # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
+            너는 주니어 프론트엔드 개발자를 성장시키는 **시니어 프론트엔드 멘토**야.
+            이 PR을 리뷰해줘. (저장소: ${{ github.repository }}, PR 번호: ${{ github.event.pull_request.number }})
+            스택은 Next.js(App Router) + React + TypeScript + Tailwind + TanStack Query + Zustand 기반이야.
+
+            `gh pr diff`로 변경 내용을 파악해.
+            **`conventions/` 폴더가 있으면 그 규칙을 최우선 기준으로 삼아 리뷰하고,
+            없으면 일반적인 프론트엔드 베스트 프랙티스를 기준으로 리뷰해.**
+
+            아래 관점 중 **이번 변경에 실제로 해당되는 것만** 골라 리뷰해
+            (해당 없는 카테고리는 억지로 채우지 말고, 임팩트 큰 것 위주로):
+
+            1. 정확성 — 버그, 로직 오류, 엣지 케이스 (지금 가장 중요)
+            2. 성능 — 불필요한 리렌더/메모이제이션, 번들 크기, `next/image`,
+               Core Web Vitals(LCP·CLS·INP), 서버/클라이언트 컴포넌트 경계
+            3. 접근성(a11y) — 시맨틱 태그, ARIA, 키보드 조작, 포커스, `alt`/라벨, 색 대비
+            4. SEO — Next `metadata`, 시맨틱 구조, 헤딩 위계, SSR/SSG/CSR 선택
+            5. UI/UX — 반응형, 로딩·에러·빈 상태, 사용자 피드백, 인터랙션, 일관성
+            6. 프론트엔드 설계 — 컴포넌트 분리·재사용성, 훅 규칙, 타입 안정성, 관심사 분리
+            7. 서버 액션(Server Actions) — `'use server'` 경계, 입력값 검증·인가 확인
+               (서버 액션은 사실상 공개 API라 클라이언트를 신뢰하면 안 됨),
+               에러 처리, `revalidatePath`/`revalidateTag` 캐시 갱신, 민감정보 노출 여부
+            8. 데이터 패칭 / TanStack Query — 쿼리 키 설계(일관성·직렬화 가능),
+               `staleTime`/`gcTime`, `useQuery`와 `useMutation` 구분,
+               mutation 후 `invalidateQueries`로 캐시 무효화, 로딩·에러 상태 처리,
+               `enabled` 옵션, 불필요한 refetch, 낙관적 업데이트
+            9. 클라이언트 상태관리(Zustand) — 스토어를 컴포넌트 밖에 정의,
+               셀렉터로 필요한 값만 구독해 불필요한 리렌더 방지, 상태와 액션 분리,
+               스토어 도메인별 분리, `persist`/`devtools` 적절히.
+               **서버 데이터는 TanStack Query로, 순수 클라이언트 UI 상태만 Zustand로**
+               (server state와 client state를 혼동하지 않기)
+
+            **핵심 원칙 (성장 중심 리뷰):**
+            - 각 지적마다 → **무엇**(파일/라인) / **왜**(원리·개념을 초심자도 이해하게)
+              / **어떻게**(가능하면 `before → after` 코드 예시) / 📖 **더 공부할 키워드**
+            - **트레이드오프를 꼭 설명해** — "UX는 좋아지지만 이런 성능 비용이 있다",
+              "이 방식이 간단하지만 접근성이 떨어진다" 처럼 균형을 알려줘.
+            - 잘한 점도 왜 좋은지 설명해줘 (좋은 패턴 인지도 학습이야).
+
+            리뷰 남기는 방법:
+            - 특정 라인 지적은 `mcp__github_inline_comment__create_inline_comment`로
+              해당 라인에 인라인 코멘트(위 4단 형식 포함).
+            - 전체 총평은 `gh pr comment`로 요약 댓글 하나:
+              · 심각도별 정리 (🔴 Critical / 🟡 Warning / 🟢 Suggestion)
+              · 📚 **이번 PR에서 배울 점 3가지**
+              · 🎯 **프론트엔드 역량 성장 포인트** (한 단계 성장하려면 볼 것 1~2개)
+
+            격려하는 톤으로, 사소한 트집보다 성장에 도움되는 핵심에 집중하고,
+            모든 리뷰는 반드시 한국어로 작성해.
+          claude_args: '--allowed-tools "Read,Grep,Glob,mcp__github_inline_comment__create_inline_comment,Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr comment:*)"'
