@@ -1,5 +1,7 @@
 name: Claude Code
 
+# @claude 를 멘션하면 Claude 가 응답/작업하는 워크플로우.
+
 on:
   issue_comment:
     types: [created]
