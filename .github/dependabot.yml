@@ -1,0 +1,20 @@
+version: 2
+updates:
+  # npm 의존성: 취약점·구버전 감지해서 업데이트 PR 자동 생성
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    labels: ["dependencies"]
+    commit-message:
+      prefix: chore
+
+  # GitHub Actions 버전도 자동 업데이트
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    labels: ["ci"]
+    commit-message:
+      prefix: chore
