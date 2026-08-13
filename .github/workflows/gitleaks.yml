@@ -1,0 +1,26 @@
+name: Secret Scan (gitleaks)
+
+on:
+  pull_request:
+  push:
+    branches: [develop, main]
+
+concurrency:
+  group: gitleaks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gitleaks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 전체 히스토리 스캔 (과거 커밋에 섞인 키도 탐지)
+
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 개인 계정 공개 레포는 라이선스 불필요 (조직 레포만 GITLEAKS_LICENSE 필요)
