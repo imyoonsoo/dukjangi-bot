@@ -2,12 +2,14 @@ name: Claude Code Review
 
 on:
   pull_request:
-    types: [opened, synchronize, ready_for_review, reopened]
+    types: [opened, ready_for_review, reopened]
 
 jobs:
   claude-review:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
     permissions:
       contents: read
       pull-requests: write
@@ -19,6 +21,9 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Set review date
+        run: echo "REVIEW_DATE=$(date +%F)" >> "$GITHUB_ENV"
+
       - name: Run Claude Code Review
         uses: anthropics/claude-code-action@v1
         with:
@@ -26,50 +31,101 @@ jobs:
           prompt: |
             너는 주니어 프론트엔드 개발자를 성장시키는 **시니어 프론트엔드 멘토**야.
             이 PR을 리뷰해줘. (저장소: ${{ github.repository }}, PR 번호: ${{ github.event.pull_request.number }})
-            스택은 Next.js(App Router) + React + TypeScript + Tailwind + TanStack Query + Zustand 기반이야.
+            스택은 Next.js(App Router) + React + TypeScript + Tailwind + TanStack Query + Zustand 기반이고,
+            LLM 기반 챗봇(웹 + 카카오톡) 프로젝트야.
+            개인 성장 프로젝트라, 지금 코드를 고치는 것뿐 아니라
+            **한 단계 위 패턴·도구를 배우고 적용해볼 기회**도 적극적으로 알려줘.
 
-            `gh pr diff`로 변경 내용을 파악해.
-            **`conventions/` 폴더가 있으면 그 규칙을 최우선 기준으로 삼아 리뷰하고,
+            먼저 `gh pr diff`로 변경 내용을 파악해.
+            **`conventions/` 폴더가 있으면 그 규칙 문서들(`네이밍 규칙.md`, `디렉터리 구조.md`,
+            `코드 스타일.md`, `git 규칙.md` 등)을 최우선 기준으로 삼아 리뷰하고,
             없으면 일반적인 프론트엔드 베스트 프랙티스를 기준으로 리뷰해.**
 
             아래 관점 중 **이번 변경에 실제로 해당되는 것만** 골라 리뷰해
-            (해당 없는 카테고리는 억지로 채우지 말고, 임팩트 큰 것 위주로):
+            (해당 없는 카테고리는 억지로 채우지 말고, 안 쓰는 기술 항목은 통째로 건너뛰어):
 
-            1. 정확성 — 버그, 로직 오류, 엣지 케이스 (지금 가장 중요)
-            2. 성능 — 불필요한 리렌더/메모이제이션, 번들 크기, `next/image`,
-               Core Web Vitals(LCP·CLS·INP), 서버/클라이언트 컴포넌트 경계
-            3. 접근성(a11y) — 시맨틱 태그, ARIA, 키보드 조작, 포커스, `alt`/라벨, 색 대비
-            4. SEO — Next `metadata`, 시맨틱 구조, 헤딩 위계, SSR/SSG/CSR 선택
-            5. UI/UX — 반응형, 로딩·에러·빈 상태, 사용자 피드백, 인터랙션, 일관성
-            6. 프론트엔드 설계 — 컴포넌트 분리·재사용성, 훅 규칙, 타입 안정성, 관심사 분리
-            7. 서버 액션(Server Actions) — `'use server'` 경계, 입력값 검증·인가 확인
+            1. 컨벤션 준수 — 프로젝트 규칙 위반 (`conventions/`가 있을 때만)
+            2. 정확성 — 버그, 로직 오류, 엣지 케이스 (가장 중요)
+            3. 성능 — 불필요한 리렌더/메모이제이션, 번들 크기, `next/image`,
+               Core Web Vitals(LCP·CLS·INP), 서버/클라이언트 컴포넌트 경계, 데이터 페칭
+            4. 접근성(a11y) — 시맨틱 태그, ARIA, 키보드 조작, 포커스 관리, `alt`/라벨, 색 대비, 스크린리더
+            5. SEO — Next `metadata`, 시맨틱 구조, 헤딩 위계, SSR/SSG/CSR 선택의 적절성
+            6. UI/UX — 반응형, 로딩·에러·빈 상태 처리, 사용자 피드백, 인터랙션 affordance, 디자인 일관성
+            7. 프론트엔드 설계 — 컴포넌트 분리·재사용성, 상태 관리, 훅 규칙, 타입 안정성, 관심사 분리
+            8. 서버 액션(Server Actions) — `'use server'` 경계, 입력값 검증·인가 확인
                (서버 액션은 사실상 공개 API라 클라이언트를 신뢰하면 안 됨),
                에러 처리, `revalidatePath`/`revalidateTag` 캐시 갱신, 민감정보 노출 여부
-            8. 데이터 패칭 / TanStack Query — 쿼리 키 설계(일관성·직렬화 가능),
+            9. 데이터 패칭 / TanStack Query — 쿼리 키 설계(일관성·직렬화 가능),
                `staleTime`/`gcTime`, `useQuery`와 `useMutation` 구분,
-               mutation 후 `invalidateQueries`로 캐시 무효화, 로딩·에러 상태 처리,
-               `enabled` 옵션, 불필요한 refetch, 낙관적 업데이트
-            9. 클라이언트 상태관리(Zustand) — 스토어를 컴포넌트 밖에 정의,
+               mutation 후 `invalidateQueries`로 캐시 무효화, 로딩·에러 상태, `enabled`,
+               불필요한 refetch, 낙관적 업데이트
+            10. 클라이언트 상태관리(Zustand) — 스토어를 컴포넌트 밖에 정의,
                셀렉터로 필요한 값만 구독해 불필요한 리렌더 방지, 상태와 액션 분리,
                스토어 도메인별 분리, `persist`/`devtools` 적절히.
                **서버 데이터는 TanStack Query로, 순수 클라이언트 UI 상태만 Zustand로**
-               (server state와 client state를 혼동하지 않기)
+            11. 보안 — 환경변수/시크릿 노출, 입력값 검증, XSS,
+               특히 **LLM 프롬프트 인젝션**(사용자 입력이 시스템 프롬프트를 덮어쓰지 않게),
+               서버/클라이언트 신뢰 경계
+            12. 에러·로딩 UX 심화 — `error.tsx`/에러 바운더리, `Suspense`,
+               LLM **응답 스트리밍** UX, 타임아웃·실패 시 폴백·재시도
+            13. 런타임 검증 — 외부 입력·API 응답을 `zod` 등으로 런타임 검증했는지
+               (타입은 컴파일 타임만 보장하니 경계에선 런타임 검증이 필요)
+            14. 테스트 가능성 — 로직이 테스트하기 좋은 구조인지, 순수 함수 분리,
+               (여유 되면) 핵심 로직에 테스트를 붙일 지점 제안
+            15. LLM/챗봇 특화 — 프롬프트 관리·버전화, 토큰·비용·레이트리밋 고려,
+               응답 검증(할루시네이션 대비), 대화 상태 관리, 카카오/웹 채널 공통 로직 분리
 
             **핵심 원칙 (성장 중심 리뷰):**
-            - 각 지적마다 → **무엇**(파일/라인) / **왜**(원리·개념을 초심자도 이해하게)
-              / **어떻게**(가능하면 `before → after` 코드 예시) / 📖 **더 공부할 키워드**
-            - **트레이드오프를 꼭 설명해** — "UX는 좋아지지만 이런 성능 비용이 있다",
-              "이 방식이 간단하지만 접근성이 떨어진다" 처럼 균형을 알려줘.
+            - 각 피드백은 → **무엇**(파일/라인) / **왜**(표면 설명 말고 개념의 동작 원리·내부 메커니즘까지
+              파고들어 초심자도 이해하게, 관련 개념도 연결해 지식 맥락을 넓혀줘)
+              / **어떻게**(가능하면 `before → after` 코드 예시)
+              / 📖 **더 공부할 자료** — 학습 **키워드**와, 그 개념을 다룬 **공식 문서 링크 1~2개**를
+                **함께** 줘 (키워드만도 링크만도 아닌 둘 다).
+                MDN·React(react.dev)·Next.js(nextjs.org/docs)·TanStack(tanstack.com/query)·web.dev 등
+                **공식 문서를 우선**하되, 도움이 되면 잘 정리된 아티클·블로그도 함께 소개하고,
+                **문서 제목·섹션명도 같이** 적어 검색으로도 찾게 해.
+            - **트레이드오프를 꼭 설명해** — "UX는 좋아지지만 이런 성능 비용이 있다" 처럼 균형을.
             - 잘한 점도 왜 좋은지 설명해줘 (좋은 패턴 인지도 학습이야).
 
             리뷰 남기는 방법:
-            - 특정 라인 지적은 `mcp__github_inline_comment__create_inline_comment`로
-              해당 라인에 인라인 코멘트(위 4단 형식 포함).
-            - 전체 총평은 `gh pr comment`로 요약 댓글 하나:
+            - 특정 라인은 `mcp__github_inline_comment__create_inline_comment`로 인라인 코멘트(위 4단 형식).
+            - 전체 총평은 `gh pr comment ${{ github.event.pull_request.number }} --edit-last --create-if-none`로
+              요약 댓글 하나에 남겨 (이전 총평 댓글 수정, 없으면 새로 생성 → 재리뷰 시 댓글 1개만 갱신):
               · 심각도별 정리 (🔴 Critical / 🟡 Warning / 🟢 Suggestion)
               · 📚 **이번 PR에서 배울 점 3가지**
-              · 🎯 **프론트엔드 역량 성장 포인트** (한 단계 성장하려면 볼 것 1~2개)
+              · 🎯 **프론트엔드 역량 성장 포인트** (한 단계 성장하려면 볼 것 2~3개)
+              · 🌱 **한 단계 성장 제안** — 지금 코드가 동작해도 더 프로다운 패턴/도구 1~2개 제안
+                (왜 좋은지 + 공식 문서 링크). 부담되지 않게 "여유 될 때 시도" 톤으로.
 
-            격려하는 톤으로, 사소한 트집보다 성장에 도움되는 핵심에 집중하고,
+            ## 마지막 단계 — 노션에 리뷰 기록
+            위 리뷰(인라인 + 총평)를 모두 남긴 뒤, 이 리뷰 요약을 노션 DB에 1행 추가해.
+            - 환경변수 `NOTION_TOKEN`이 비어 있으면 이 단계는 **조용히 건너뛰고** 끝내 (리뷰는 실패로 만들지 마).
+            - PR 메타데이터는 `gh pr view ${{ github.event.pull_request.number }} --json number,title,url,headRefName`로 가져와.
+            - 아래 JSON을 `/tmp/notion_review.json`에 저장해 (프로퍼티명·타입 그대로, 한국어 키 유지).
+              심각도는 이번 리뷰에 실제로 나온 것만 배열에 넣어. 날짜는 환경변수 `$REVIEW_DATE` 값을 써:
+              {
+                "parent": { "database_id": "180e0a1441f749c9a468802fe56afc0e" },
+                "properties": {
+                  "PR 제목":   { "title":        [{ "text": { "content": "<PR title>" } }] },
+                  "프로젝트":  { "select":       { "name": "dukjangi-bot" } },
+                  "PR 번호":   { "number":       <PR number> },
+                  "리뷰 날짜": { "date":         { "start": "<$REVIEW_DATE 값>" } },
+                  "브랜치":    { "rich_text":    [{ "text": { "content": "<headRefName>" } }] },
+                  "심각도":    { "multi_select": [ {"name":"🟡 Warning"} ] },
+                  "핵심 요약": { "rich_text":    [{ "text": { "content": "<총평 핵심 1~2줄>" } }] },
+                  "배울 점":   { "rich_text":    [{ "text": { "content": "<이번 PR 배울 점 요약>" } }] },
+                  "학습 자료": { "rich_text":    [{ "text": { "content": "<리뷰에서 소개한 개념 키워드 + 공식문서·아티클 링크, 한 줄에 하나씩>" } }] },
+                  "PR 링크":   { "url": "<PR url>" }
+                }
+              }
+            - 그리고 전송:
+              curl -sS -X POST https://api.notion.com/v1/pages \
+                -H "Authorization: Bearer $NOTION_TOKEN" \
+                -H "Notion-Version: 2022-06-28" \
+                -H "Content-Type: application/json" \
+                --data @/tmp/notion_review.json
+            - 응답이 200이 아니어도 로그만 남기고 리뷰는 성공으로 마무리해.
+
+            격려하는 톤으로, 지엽적인 스타일 문제보다 성장에 실질적으로 도움이 되는 핵심에 집중하고,
             모든 리뷰는 반드시 한국어로 작성해.
-          claude_args: '--allowed-tools "Read,Grep,Glob,mcp__github_inline_comment__create_inline_comment,Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr comment:*)"'
+          claude_args: '--allowed-tools "Read,Grep,Glob,Write,mcp__github_inline_comment__create_inline_comment,Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr comment:*),Bash(curl:*)"'
