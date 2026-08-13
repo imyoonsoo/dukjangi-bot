@@ -20,7 +20,7 @@ jobs:
           fetch-depth: 0 # 전체 히스토리 스캔 (과거 커밋에 섞인 키도 탐지)
 
       - name: Run gitleaks
-        uses: gitleaks/gitleaks-action@v2
+        uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # 개인 계정 공개 레포는 라이선스 불필요 (조직 레포만 GITLEAKS_LICENSE 필요)
