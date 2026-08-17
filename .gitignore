@@ -25,6 +25,7 @@
 
 # 코드리뷰 워크플로우가 노션 전송용으로 잠깐 만드는 파일
 /notion_review.json
+/notion_response.json
 
 # misc
 .DS_Store
