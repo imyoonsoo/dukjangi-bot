@@ -4,8 +4,9 @@ updates:
   - package-ecosystem: npm
     directory: "/"
     schedule:
-      interval: weekly
-      day: monday
+      # 개인 프로젝트라 주간은 과해서 월간으로 둔다.
+      # 보안 취약점 알림(Dependabot security alerts)은 이 주기와 무관하게 즉시 온다.
+      interval: monthly
       time: "09:00"
       timezone: Asia/Seoul
     open-pull-requests-limit: 3
@@ -28,8 +29,9 @@ updates:
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
-      interval: weekly
-      day: monday
+      # 개인 프로젝트라 주간은 과해서 월간으로 둔다.
+      # 보안 취약점 알림(Dependabot security alerts)은 이 주기와 무관하게 즉시 온다.
+      interval: monthly
       time: "09:00"
       timezone: Asia/Seoul
     open-pull-requests-limit: 3
