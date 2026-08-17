@@ -10,8 +10,12 @@ concurrency:
 
 jobs:
   lighthouse:
+    # Dependabot 등 봇이 연 PR은 건너뜀 (의존성 범프에 성능 측정은 불필요, Actions 시간 절약)
+    if: github.event.pull_request.user.type != 'Bot'
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,7 +23,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
@@ -28,12 +32,11 @@ jobs:
       - name: Build
         run: npm run build
 
+      # 서버 기동 설정은 lighthouserc.json 에 있음.
+      # startServerCommand 는 이 액션의 입력이 아니라 LHCI 설정이라 여기 두면 무시된다.
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v12
         with:
-          urls: |
-            http://localhost:3000/
-          startServerCommand: npm run start
-          startServerReadyPattern: "Ready in|Local:"
+          configPath: ./lighthouserc.json
           uploadArtifacts: true
           temporaryPublicStorage: true # 결과 리포트를 PR 체크에 링크로 남김 (점수 확인용, 실패로 막진 않음)

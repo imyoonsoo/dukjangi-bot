@@ -5,16 +5,37 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+      day: monday
+      time: "09:00"
+      timezone: Asia/Seoul
+    open-pull-requests-limit: 3
     labels: ["dependencies"]
     commit-message:
       prefix: chore
+    # 위에서부터 먼저 매칭되는 그룹이 이긴다.
+    # 함께 움직여야 하는 패키지를 묶어 버전 어긋남(예: next 만 올라가고
+    # eslint-config-next 는 그대로)을 막고, 나머지 자잘한 업데이트는 한 PR 로 합친다.
+    groups:
+      next:
+        patterns: ["next", "eslint-config-next", "@next/*"]
+      react:
+        patterns: ["react", "react-dom", "@types/react", "@types/react-dom"]
+      minor-and-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
 
   # GitHub Actions 버전도 자동 업데이트
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
       interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Asia/Seoul
+    open-pull-requests-limit: 3
     labels: ["ci"]
     commit-message:
       prefix: chore
+    groups:
+      github-actions:
+        patterns: ["*"]
