@@ -20,6 +20,9 @@
 # production
 /build
 
+# lighthouse ci (로컬 실행 시 생기는 리포트 출력 디렉터리)
+/.lighthouseci/
+
 # misc
 .DS_Store
 *.pem
