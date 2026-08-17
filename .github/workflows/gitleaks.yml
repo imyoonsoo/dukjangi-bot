@@ -11,8 +11,15 @@ concurrency:
 
 jobs:
   gitleaks:
+    # Dependabot PR 의 토큰은 읽기 전용이라 PR 커밋 조회가 403 으로 막힘.
+    # push(develop/main) 실행이 전체 히스토리를 스캔하므로 커버리지 손실은 없다.
+    if: github.event_name == 'push' || github.event.pull_request.user.type != 'Bot'
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # gitleaks-action 이 PR 커밋 목록을 조회하므로 pull-requests 읽기 권한이 필요하다.
+    permissions:
+      contents: read
+      pull-requests: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
