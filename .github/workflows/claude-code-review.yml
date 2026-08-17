@@ -6,6 +6,10 @@ on:
 
 jobs:
   claude-review:
+    # Dependabot 등 봇이 연 PR 은 건너뜀.
+    # 봇 이벤트에는 저장소 시크릿이 전달되지 않아 CLAUDE_CODE_OAUTH_TOKEN 이 비고,
+    # 액션 자체도 non-human actor 를 거부하므로 실행해봐야 항상 실패한다.
+    if: github.event.pull_request.user.type != 'Bot'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -28,6 +32,15 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Claude 는 별도 하위 프로세스로 실행되어 잡(job)의 env 를 물려받지 않으므로
+          # 필요한 값은 여기로 넘겨야 Claude 의 Bash 에서 보인다.
+          # 노션 토큰은 넘기지 않는다 — 전송은 아래 별도 스텝이 담당한다.
+          settings: |
+            {
+              "env": {
+                "REVIEW_DATE": "${{ env.REVIEW_DATE }}"
+              }
+            }
           prompt: |
             너는 주니어 프론트엔드 개발자를 성장시키는 **시니어 프론트엔드 멘토**야.
             이 PR을 리뷰해줘. (저장소: ${{ github.repository }}, PR 번호: ${{ github.event.pull_request.number }})
@@ -99,9 +112,11 @@ jobs:
 
             ## 마지막 단계 — 노션에 리뷰 기록
             위 리뷰(인라인 + 총평)를 모두 남긴 뒤, 이 리뷰 요약을 노션 DB에 1행 추가해.
-            - 환경변수 `NOTION_TOKEN`이 비어 있으면 이 단계는 **조용히 건너뛰고** 끝내 (리뷰는 실패로 만들지 마).
+            - 토큰은 네가 다루지 않는다. 아래 JSON 파일만 만들면 된다.
             - PR 메타데이터는 `gh pr view ${{ github.event.pull_request.number }} --json number,title,url,headRefName`로 가져와.
-            - 아래 JSON을 `/tmp/notion_review.json`에 저장해 (프로퍼티명·타입 그대로, 한국어 키 유지).
+            - 아래 JSON을 작업 디렉터리의 `notion_review.json`에 저장해
+              (`/tmp` 같은 바깥 경로는 쓰기가 막힐 수 있으니 반드시 작업 디렉터리에).
+              프로퍼티명·타입은 그대로, 한국어 키 유지.
               심각도는 이번 리뷰에 실제로 나온 것만 배열에 넣어. 날짜는 환경변수 `$REVIEW_DATE` 값을 써:
               {
                 "parent": { "database_id": "180e0a1441f749c9a468802fe56afc0e" },
@@ -118,14 +133,47 @@ jobs:
                   "PR 링크":   { "url": "<PR url>" }
                 }
               }
-            - 그리고 전송:
-              curl -sS -X POST https://api.notion.com/v1/pages \
-                -H "Authorization: Bearer $NOTION_TOKEN" \
-                -H "Notion-Version: 2022-06-28" \
-                -H "Content-Type: application/json" \
-                --data @/tmp/notion_review.json
-            - 응답이 200이 아니어도 로그만 남기고 리뷰는 성공으로 마무리해.
+            - **전송은 하지 마.** 파일로 저장만 하면 다음 워크플로우 스텝이 알아서 노션에 보낸다.
+              네가 할 일은 `notion_review.json` 을 올바른 JSON 으로 남기는 것까지다.
 
             격려하는 톤으로, 지엽적인 스타일 문제보다 성장에 실질적으로 도움이 되는 핵심에 집중하고,
             모든 리뷰는 반드시 한국어로 작성해.
-          claude_args: '--allowed-tools "Read,Grep,Glob,Write,mcp__github_inline_comment__create_inline_comment,Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr comment:*),Bash(curl:*)"'
+          claude_args: '--allowed-tools "Read,Grep,Glob,Write,mcp__github_inline_comment__create_inline_comment,Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr comment:*)"'
+
+      # 노션 전송은 Claude 가 아니라 여기서 한다.
+      # Claude 출력은 show_full_output 이 false 라 로그에 안 남지만, 이 스텝은 다 남는다.
+      # 그래서 실패해도 "왜 안 됐는지"가 로그에 보인다.
+      - name: 노션 DB에 리뷰 기록
+        if: always()
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+        run: |
+          if [ -z "$NOTION_TOKEN" ]; then
+            echo "건너뜀: NOTION_TOKEN 시크릿이 비어 있습니다."
+            exit 0
+          fi
+          if [ ! -f notion_review.json ]; then
+            echo "건너뜀: notion_review.json 이 없습니다 (Claude 가 파일을 만들지 않음)."
+            exit 0
+          fi
+
+          echo "--- 전송할 JSON ---"
+          cat notion_review.json
+
+          code=$(curl -sS -o notion_response.json -w '%{http_code}' \
+            -X POST https://api.notion.com/v1/pages \
+            -H "Authorization: Bearer $NOTION_TOKEN" \
+            -H "Notion-Version: 2022-06-28" \
+            -H "Content-Type: application/json" \
+            --data @notion_review.json) || true
+
+          echo "--- 노션 응답 (HTTP $code) ---"
+          cat notion_response.json || true
+          echo
+
+          if [ "$code" = "200" ]; then
+            echo "노션 기록 완료"
+          else
+            # 리뷰 자체를 빨간불로 만들지는 않는다
+            echo "::warning::노션 기록 실패 (HTTP $code) — 위 응답 본문 확인"
+          fi

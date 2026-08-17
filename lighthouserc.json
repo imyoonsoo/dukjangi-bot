@@ -1,0 +1,10 @@
+{
+  "ci": {
+    "collect": {
+      "startServerCommand": "npm run start",
+      "startServerReadyPattern": "Ready in|Local:",
+      "url": ["http://localhost:3000/"],
+      "numberOfRuns": 1
+    }
+  }
+}
