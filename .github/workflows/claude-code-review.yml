@@ -6,6 +6,10 @@ on:
 
 jobs:
   claude-review:
+    # Dependabot 등 봇이 연 PR 은 건너뜀.
+    # 봇 이벤트에는 저장소 시크릿이 전달되지 않아 CLAUDE_CODE_OAUTH_TOKEN 이 비고,
+    # 액션 자체도 non-human actor 를 거부하므로 실행해봐야 항상 실패한다.
+    if: github.event.pull_request.user.type != 'Bot'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
