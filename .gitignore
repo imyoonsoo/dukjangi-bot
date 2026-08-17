@@ -23,6 +23,9 @@
 # lighthouse ci (로컬 실행 시 생기는 리포트 출력 디렉터리)
 /.lighthouseci/
 
+# 코드리뷰 워크플로우가 노션 전송용으로 잠깐 만드는 파일
+/notion_review.json
+
 # misc
 .DS_Store
 *.pem

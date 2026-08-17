@@ -32,6 +32,15 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Claude 는 별도 하위 프로세스로 실행되어 잡(job)의 env 를 물려받지 않는다.
+          # 노션 기록에 쓰는 값은 반드시 여기로 넘겨야 Claude 의 Bash 에서 보인다.
+          settings: |
+            {
+              "env": {
+                "NOTION_TOKEN": "${{ secrets.NOTION_TOKEN }}",
+                "REVIEW_DATE": "${{ env.REVIEW_DATE }}"
+              }
+            }
           prompt: |
             너는 주니어 프론트엔드 개발자를 성장시키는 **시니어 프론트엔드 멘토**야.
             이 PR을 리뷰해줘. (저장소: ${{ github.repository }}, PR 번호: ${{ github.event.pull_request.number }})
@@ -103,9 +112,12 @@ jobs:
 
             ## 마지막 단계 — 노션에 리뷰 기록
             위 리뷰(인라인 + 총평)를 모두 남긴 뒤, 이 리뷰 요약을 노션 DB에 1행 추가해.
-            - 환경변수 `NOTION_TOKEN`이 비어 있으면 이 단계는 **조용히 건너뛰고** 끝내 (리뷰는 실패로 만들지 마).
+            - 먼저 `echo "${#NOTION_TOKEN}"` 로 토큰 길이를 찍어 확인해.
+              0 이면 `노션 기록 건너뜀: NOTION_TOKEN 없음` 을 출력하고 이 단계를 끝내 (리뷰는 실패로 만들지 마).
             - PR 메타데이터는 `gh pr view ${{ github.event.pull_request.number }} --json number,title,url,headRefName`로 가져와.
-            - 아래 JSON을 `/tmp/notion_review.json`에 저장해 (프로퍼티명·타입 그대로, 한국어 키 유지).
+            - 아래 JSON을 작업 디렉터리의 `notion_review.json`에 저장해
+              (`/tmp` 같은 바깥 경로는 쓰기가 막힐 수 있으니 반드시 작업 디렉터리에).
+              프로퍼티명·타입은 그대로, 한국어 키 유지.
               심각도는 이번 리뷰에 실제로 나온 것만 배열에 넣어. 날짜는 환경변수 `$REVIEW_DATE` 값을 써:
               {
                 "parent": { "database_id": "180e0a1441f749c9a468802fe56afc0e" },
@@ -122,13 +134,16 @@ jobs:
                   "PR 링크":   { "url": "<PR url>" }
                 }
               }
-            - 그리고 전송:
+            - 그리고 전송해. 응답 본문과 HTTP 상태 코드가 **반드시 로그에 보이도록** `-w` 를 붙여:
               curl -sS -X POST https://api.notion.com/v1/pages \
                 -H "Authorization: Bearer $NOTION_TOKEN" \
                 -H "Notion-Version: 2022-06-28" \
                 -H "Content-Type: application/json" \
-                --data @/tmp/notion_review.json
-            - 응답이 200이 아니어도 로그만 남기고 리뷰는 성공으로 마무리해.
+                -w '\n노션 응답 코드: %{http_code}\n' \
+                --data @notion_review.json
+            - 마지막으로 `노션 기록 완료 (HTTP <코드>)` 형태로 결과를 한 줄 출력해.
+              200 이 아니면 응답 본문을 그대로 출력해서 원인을 남겨.
+              단, 노션 기록이 실패하더라도 리뷰 자체는 성공으로 마무리해 (체크를 빨간불로 만들지 마).
 
             격려하는 톤으로, 지엽적인 스타일 문제보다 성장에 실질적으로 도움이 되는 핵심에 집중하고,
             모든 리뷰는 반드시 한국어로 작성해.
