@@ -48,5 +48,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# vscode (에디터 설정은 개인 환경이므로 저장소에 올리지 않는다)
+# editor
 .vscode/
+.idea/
