@@ -1,0 +1,622 @@
+// 교내장학금 데이터 (공식 홈페이지 기준)
+
+export type scholarshipCategory = "성적" | "가계" | "참여" | "기타";
+export type scholarshipTarget = "신입생" | "재학생" | "8학기초과";
+
+export interface Scholarship {
+  title: string; // 장학금명
+  category: scholarshipCategory; // 분류
+  target: scholarshipTarget; // 대상
+  eligibility: string; // 자격요건
+  benefit: string; // 혜택
+  selectionType?: "자동" | "신청"; // 신청조건
+  supportPeriod?: string; // 지급기한
+  applicationPeriod?: string; // 신청기한
+  documents?: string; // 제출서류
+  note?: string; // 비고
+}
+
+export const scholarShip: Scholarship[] = [
+  // 신입생
+  {
+    title: "운현장학금",
+    category: "성적",
+    target: "신입생",
+    eligibility:
+      "수시모집 수석합격자 (고교추천·논술·미술실기·덕성인재전형Ⅰ·Ⅱ 최초 합격자)",
+    benefit:
+      "수업료 전액 면제 + 도서구입비 매월 10만원 + 글로벌교육원 지정프로그램 무료수강 + 취업프로그램 우선선발. 수능 반영영역 성적 기준 충족 시 해외교환/어학연수(총 300만원 이내) 및 지방학생 기숙사비 1년 면제 추가",
+    selectionType: "자동",
+    supportPeriod:
+      "4년(약학대학 6년). 직전학기 취득 12학점 미만 또는 평점 3.50 미만이면 그 학기 미지급",
+    note: "2가지 이상 기준 해당 시 상위 1개 장학금만 지급",
+  },
+  {
+    title: "덕성누리장학금",
+    category: "성적",
+    target: "신입생",
+    eligibility:
+      "수시 각 전형별 수석합격자 / 정시 수능 3개 영역(국어·수학·영어) 합 4등급 이내이면서 단과대학별 모집인원 상위 5% 이내",
+    benefit:
+      "수업료 전액 면제 + 글로벌교육원 지정프로그램 무료수강 + 취업프로그램 우선선발",
+    selectionType: "자동",
+    supportPeriod:
+      "4년(약학대학 6년). 직전학기 취득 12학점 미만 또는 평점 3.50 미만이면 그 학기 미지급",
+    note: "2가지 이상 기준 해당 시 상위 1개 장학금만 지급",
+  },
+  {
+    title: "덕성글로벌리더장학금",
+    category: "성적",
+    target: "신입생",
+    eligibility:
+      "정시 수능 4개 영역(국어·영어·수학·탐구) 모두 1등급이면서 단과대학별 모집인원 상위 5% 이내 (탐구 상위 1과목, 약대는 과탐 2과목)",
+    benefit:
+      "수업료 전액 면제 + 도서구입비 매월 50만원 + 해외교환/어학연수(총 600만원 이내) + 본교 대학원 진학 시 등록금 전액 면제 + 지방학생 기숙사비 4년 면제 + 글로벌교육원 무료수강 + 취업프로그램 우선선발",
+    selectionType: "자동",
+    supportPeriod:
+      "4년(약학대학 6년). 직전학기 취득 12학점 미만 또는 평점 3.50 미만이면 그 학기 미지급",
+  },
+  {
+    title: "덕성인재육성장학금",
+    category: "성적",
+    target: "신입생",
+    eligibility:
+      "정시 수능 4개 영역 중 3개 영역 1등급이면서 단과대학별 모집인원 상위 5% 이내",
+    benefit:
+      "수업료 전액 면제 + 도서구입비 매월 50만원 + 해외교환/어학연수(총 500만원 이내) + 지방학생 기숙사비 1년 면제 + 글로벌교육원 무료수강 + 취업프로그램 우선선발",
+    selectionType: "자동",
+    supportPeriod:
+      "4년(약학대학 6년). 직전학기 취득 12학점 미만 또는 평점 3.50 미만이면 그 학기 미지급",
+  },
+  {
+    title: "차미리사장학금",
+    category: "성적",
+    target: "신입생",
+    eligibility:
+      "정시 수능 반영영역 성적이 일정 기준 이상이면서 단과대학별 모집인원 상위 5% 이내",
+    benefit:
+      "수업료 전액 면제 + 도서구입비 매월 30만원 + 해외교환/어학연수(총 400만원 이내) + 지방학생 기숙사비 1년 면제 + 글로벌교육원 무료수강 + 취업프로그램 우선선발",
+    selectionType: "자동",
+    supportPeriod:
+      "4년(약학대학 6년). 직전학기 취득 12학점 미만 또는 평점 3.50 미만이면 그 학기 미지급",
+  },
+  {
+    title: "단과대학수석장학금",
+    category: "성적",
+    target: "신입생",
+    eligibility: "수시모집 단과대학별 수석합격자",
+    benefit:
+      "수업료 전액 면제(1회) + 글로벌교육원 지정프로그램 무료수강 + 취업프로그램 우선선발",
+    selectionType: "자동",
+    supportPeriod: "1회",
+  },
+  {
+    title: "단과대학차석장학금",
+    category: "성적",
+    target: "신입생",
+    eligibility: "수시·정시 단과대학별 차석합격자",
+    benefit: "수업료 전액 면제(1회) + 취업프로그램 우선선발",
+    selectionType: "자동",
+    supportPeriod: "1회",
+  },
+  {
+    title: "남해장학금",
+    category: "성적",
+    target: "신입생",
+    eligibility: "정시모집 단과대학별 수석합격자",
+    benefit: "수업료 전액 면제(1회)",
+    selectionType: "자동",
+    supportPeriod: "1회",
+  },
+  {
+    title: "성적우수장학금(신입생)",
+    category: "성적",
+    target: "신입생",
+    eligibility: "입학성적 총점 순위가 각 전형 단과대학별 합격자 상위 10% 이내",
+    benefit: "수업료 전액 면제(1회)",
+    selectionType: "자동",
+    supportPeriod: "1회",
+  },
+  {
+    title: "덕성봉사장학금",
+    category: "참여",
+    target: "신입생",
+    eligibility:
+      "정시 합격자 중 고교시절 봉사활동 800시간 이상이면서 입학성적 총점 순위가 최종 합격자 상위 20% 이내 (학생부 최초입력 시점까지 인정)",
+    benefit: "수업료 전액 면제(1회)",
+    selectionType: "자동",
+    supportPeriod: "1회",
+  },
+
+  // 재학생 (8학기 이내)
+  {
+    title: "전공(학과)수석",
+    category: "성적",
+    target: "재학생",
+    eligibility:
+      "각 전공(학과, 단과대학)별 성적 수석 (전공 1과목 이상 이수, 평점 3.5 이상). 1학년은 단과대학 수석",
+    benefit: "수업료 전액",
+    note: "12학점 미만, 수강철회자, 8학기 이상 재학자 제외",
+  },
+  {
+    title: "전공(학과)차석",
+    category: "성적",
+    target: "재학생",
+    eligibility: "각 전공(학과, 단과대학)별 성적 차석. 1학년은 단과대학 차석",
+    benefit: "수업료 70%",
+    note: "12학점 미만, 수강철회자, 8학기 이상 재학자 제외",
+  },
+  {
+    title: "단과대학우수",
+    category: "성적",
+    target: "재학생",
+    eligibility: "단과대학 소속 1학년 대상, 단과대학별 성적 상위 5% 이내",
+    benefit: "수업료 50%",
+    note: "12학점 미만, 수강철회자, 8학기 이상 재학자 제외",
+  },
+  {
+    title: "우수",
+    category: "성적",
+    target: "재학생",
+    eligibility: "각 전공(학과, 단과대학)별 성적 상위 20% 이내",
+    benefit: "수업료 30%",
+    note: "12학점 미만, 수강철회자, 8학기 이상 재학자 제외",
+  },
+  {
+    title: "덕성인재장려",
+    category: "가계",
+    target: "재학생",
+    eligibility: "가정형편이 곤란한 학생 (평점 2.0 이상)",
+    benefit: "일정액",
+    applicationPeriod: "6월, 12월",
+  },
+  {
+    title: "보훈",
+    category: "기타",
+    target: "재학생",
+    eligibility:
+      "국가보훈자녀, 광주민주유공자자녀, 북한이탈주민 (평점 1.75 이상)",
+    benefit: "등록금 전액",
+  },
+  {
+    title: "덕성가족",
+    category: "기타",
+    target: "재학생",
+    eligibility: "모친이 본교 동문이거나 자매가 재학 중인 학생 (평점 2.5 이상)",
+    benefit: "수업료 17%",
+    applicationPeriod: "3월, 9월",
+    documents: "가족관계증명서, (동문 시) 졸업증명서",
+  },
+  {
+    title: "기숙사 사생회",
+    category: "참여",
+    target: "재학생",
+    eligibility: "기숙사 사생회 임원 (평점 2.5 이상)",
+    benefit: "학기중 75만원 / 방학중 40만원",
+  },
+  {
+    title: "리더십",
+    category: "참여",
+    target: "재학생",
+    eligibility: "학생자치기구 및 언론사 임원 (평점 2.5 이상)",
+    benefit: "30만원 ~ 수업료 전액",
+  },
+  {
+    title: "교직원자녀",
+    category: "기타",
+    target: "재학생",
+    eligibility:
+      "본교 재직 교직원 자녀로 본교에 재학 중인 학생 (평점 2.5 이상)",
+    benefit: "등록금 전액",
+    note: "교직원 학자금지원(학비보조)과 합산하여 총 8학기 지원",
+  },
+  {
+    title: "교육근로",
+    category: "참여",
+    target: "재학생",
+    eligibility: "교내 행정부서 근로학생",
+    benefit: "근무시간 상응금액",
+  },
+  {
+    title: "덕성사랑",
+    category: "가계",
+    target: "재학생",
+    eligibility: "가정형편이 곤란한 학생 (평점 2.0 이상)",
+    benefit: "일정액",
+    applicationPeriod: "5월, 11월",
+  },
+  {
+    title: "희망나눔",
+    category: "가계",
+    target: "신입생",
+    eligibility: "가정형편이 곤란한 신입생",
+    benefit: "일정액",
+    applicationPeriod: "5월, 11월",
+  },
+  {
+    title: "복지",
+    category: "기타",
+    target: "재학생",
+    eligibility: "장애인 학생 또는 북한이탈주민",
+    benefit: "100만원",
+    applicationPeriod: "3월, 9월",
+  },
+  {
+    title: "근화",
+    category: "참여",
+    target: "재학생",
+    eligibility: "교내외 봉사활동 참여자 또는 본교 명예 선양자",
+    benefit: "100만~200만원",
+  },
+  {
+    title: "도봉·덕성",
+    category: "기타",
+    target: "재학생",
+    eligibility:
+      "본인 및 보호자 도봉구 2년 이상 거주, 성적 우수 및 가계 곤란자",
+    benefit: "100만원",
+    applicationPeriod: "3월, 9월",
+    documents: "주민등록등본",
+  },
+  {
+    title: "언어능력우수",
+    category: "참여",
+    target: "재학생",
+    eligibility: "어학 자격증 일정 기준 이상 취득자",
+    benefit: "50만원",
+    applicationPeriod: "5월, 11월",
+    documents: "자격증(성적표)",
+  },
+  {
+    title: "사회봉사",
+    category: "참여",
+    target: "재학생",
+    eligibility: "사회봉사과에서 선발된 봉사활동 우수자",
+    benefit: "100만원",
+    applicationPeriod: "3월, 9월",
+    documents: "신청서, 봉사확인서, 보고서",
+  },
+  {
+    title: "재능1",
+    category: "참여",
+    target: "재학생",
+    eligibility: "국제대회·전국규모 대회 등에서 3위 이내 입상자",
+    benefit:
+      "참여 인원별 차등 (1~4인 50만원 / 5~9인 100만원 / 10인 이상 150만원)",
+    applicationPeriod: "5월, 11월",
+    documents: "신청서, 대회서류, 수상내역",
+  },
+  {
+    title: "재능2",
+    category: "참여",
+    target: "재학생",
+    eligibility: "교내 경진대회 및 학술제 입상자",
+    benefit: "일정액",
+  },
+  {
+    title: "파견학생 체재비",
+    category: "참여",
+    target: "재학생",
+    eligibility: "파견학생 체재비 지원 대상 선발자",
+    benefit: "일정액",
+  },
+  {
+    title: "해외봉사",
+    category: "참여",
+    target: "재학생",
+    eligibility: "교내 해외봉사 프로그램 선발자",
+    benefit: "일정액",
+  },
+  {
+    title: "성적향상",
+    category: "성적",
+    target: "재학생",
+    eligibility: "직전학기 대비 성적 향상자",
+    benefit: "수업료 17%",
+    note: "12학점 미만, 수강철회자 제외",
+  },
+  {
+    title: "캐치업 프로그램",
+    category: "성적",
+    target: "재학생",
+    eligibility: "캐치업 프로그램 전 영역 이수자",
+    benefit: "수업료 10%",
+    note: "12학점 미만, 수강철회자 제외",
+  },
+  {
+    title: "특별",
+    category: "기타",
+    target: "재학생",
+    eligibility: "총장 또는 장학위원회가 인정하는 학생",
+    benefit: "일정액",
+  },
+  {
+    title: "투게더!덕성 학습공동체",
+    category: "참여",
+    target: "재학생",
+    eligibility: "투게더! 덕성 학습공동체 참가자",
+    benefit: "일정액",
+  },
+  {
+    title: "덕성튜터링",
+    category: "참여",
+    target: "재학생",
+    eligibility: "덕성튜터링 튜터 (전체학기 누적 평점 3.5 이상)",
+    benefit: "80만원 (우수 튜터 선발 시 10~30만원 추가)",
+  },
+  {
+    title: "하나튜터링",
+    category: "참여",
+    target: "재학생",
+    eligibility: "하나튜터링 튜터 (전체학기 누적 평점 3.5 이상)",
+    benefit: "80만원 (우수 튜터 선발 시 10~30만원 추가)",
+  },
+  {
+    title: "글로벌튜터링",
+    category: "참여",
+    target: "재학생",
+    eligibility: "글로벌튜터링 튜터 (전체학기 누적 평점 3.5 이상)",
+    benefit: "80만원 (우수 튜터 선발 시 30만원 추가)",
+  },
+  {
+    title: "학습 프로젝트 지원",
+    category: "참여",
+    target: "재학생",
+    eligibility: "학습 프로젝트 참가자",
+    benefit: "일정액 (우수 팀 추가 지급)",
+  },
+  {
+    title: "대학혁신지원사업 학생모니터링단",
+    category: "참여",
+    target: "재학생",
+    eligibility: "학생모니터링단(ICAN서포터즈) 참여자",
+    benefit: "100만원 이내",
+  },
+  {
+    title: "ICAN마일리지",
+    category: "참여",
+    target: "재학생",
+    eligibility: "비교과 프로그램 ICAN마일리지 우수 획득자",
+    benefit: "일정액",
+  },
+  {
+    title: "빛내미",
+    category: "참여",
+    target: "재학생",
+    eligibility: "홍보대사 빛내미 (평점 2.5 이상)",
+    benefit: "회장단 50만원 이상 / 팀원 30만원 이상",
+  },
+  {
+    title: "빛내미활동장려금",
+    category: "참여",
+    target: "재학생",
+    eligibility: "빛내미 활동자",
+    benefit: "30만~200만원",
+  },
+  {
+    title: "학생기자",
+    category: "참여",
+    target: "재학생",
+    eligibility: "학생기자 선발자",
+    benefit: "30만~200만원",
+  },
+  {
+    title: "온라인홍보",
+    category: "참여",
+    target: "재학생",
+    eligibility: "온라인 홍보단 선발자",
+    benefit: "30만~200만원",
+  },
+  {
+    title: "방문학생",
+    category: "참여",
+    target: "재학생",
+    eligibility: "방문학생 선발자",
+    benefit: "수업료 전액",
+  },
+  {
+    title: "어학연수생",
+    category: "참여",
+    target: "재학생",
+    eligibility: "어학연수생 선발자",
+    benefit: "30만~500만원",
+  },
+  {
+    title: "복수학위파견",
+    category: "참여",
+    target: "재학생",
+    eligibility: "복수학위 파견자",
+    benefit: "수업료 전액",
+  },
+  {
+    title: "글로벌챌린저",
+    category: "참여",
+    target: "재학생",
+    eligibility: "글로벌챌린저 선발자",
+    benefit: "일정액",
+  },
+  {
+    title: "리베(Liber)",
+    category: "참여",
+    target: "재학생",
+    eligibility: "도서관 우수이용자 (도서관장 추천)",
+    benefit: "일정액",
+  },
+  {
+    title: "커리어서포터즈",
+    category: "참여",
+    target: "재학생",
+    eligibility: "커리어서포터즈 선발자",
+    benefit: "일정액",
+  },
+  {
+    title: "국제교류서포터즈",
+    category: "참여",
+    target: "재학생",
+    eligibility: "국제교류서포터즈 선발자",
+    benefit: "100만원 이내",
+  },
+  {
+    title: "도서관서포터즈",
+    category: "참여",
+    target: "재학생",
+    eligibility: "도서관 자율위원 (도서관장 추천)",
+    benefit: "30만원",
+  },
+  {
+    title: "덕성미디어",
+    category: "참여",
+    target: "재학생",
+    eligibility: "신문사 기자 및 방송국 국원",
+    benefit: "20만~100만원",
+  },
+  {
+    title: "문화탐방",
+    category: "참여",
+    target: "재학생",
+    eligibility: "교내 문화탐방 프로그램 선발자",
+    benefit: "일정액",
+  },
+  {
+    title: "대학혁신지원사업 콜라보 프로젝트",
+    category: "참여",
+    target: "재학생",
+    eligibility: "교수자-학습자 콜라보 프로젝트 참여자",
+    benefit: "일정액",
+  },
+  {
+    title: "덕성 장애인식개선 서포터즈",
+    category: "참여",
+    target: "재학생",
+    eligibility: "장애인식개선 서포터즈 선발자",
+    benefit: "20만~30만원",
+  },
+  {
+    title: "Fly-up 멘토링",
+    category: "참여",
+    target: "재학생",
+    eligibility: "Fly-up 멘토링 프로그램 멘토",
+    benefit: "50만원",
+  },
+  {
+    title: "창의융합 교과목 학생지원",
+    category: "참여",
+    target: "재학생",
+    eligibility: "창의융합 교과목(PBL 등) 선발자",
+    benefit: "30만원 이내",
+  },
+  {
+    title: "진단·조사 장학금",
+    category: "참여",
+    target: "재학생",
+    eligibility: "교육혁신 성과 관련 진단·조사 참여자",
+    benefit: "일정액",
+  },
+  {
+    title: "진로탐색(자기주도)",
+    category: "참여",
+    target: "재학생",
+    eligibility: "진로탐색학점제 프로젝트 참여자",
+    benefit: "일정액",
+  },
+  {
+    title: "신입생 멘토링(DS-FM, DS-GLM)",
+    category: "참여",
+    target: "재학생",
+    eligibility: "신입생 멘토링 선배 멘토",
+    benefit: "일정액",
+  },
+  {
+    title: "교양교육 서포터즈",
+    category: "참여",
+    target: "재학생",
+    eligibility: "필수교양 수업운영 지원 서포터즈",
+    benefit: "일정액",
+  },
+
+  // 8학기(약대 12학기) 초과 재학생
+  {
+    title: "덕성고시A",
+    category: "참여",
+    target: "8학기초과",
+    eligibility: "국가고시(5급, 외교관, CPA, 변리사) 최종 합격자",
+    benefit: "200만원",
+  },
+  {
+    title: "덕성고시B",
+    category: "참여",
+    target: "8학기초과",
+    eligibility: "국가고시 1차 합격자, 계리사, 관세사, 세무사, 7급 최종 합격자",
+    benefit: "100만원",
+  },
+  {
+    title: "덕성고시C",
+    category: "참여",
+    target: "8학기초과",
+    eligibility: "고시반 등록생 중 지도교수 추천 및 심사 선발자",
+    benefit: "50만원",
+  },
+  {
+    title: "인턴십",
+    category: "참여",
+    target: "8학기초과",
+    eligibility: "인턴십 프로그램 선발자",
+    benefit: "일정액",
+  },
+  {
+    title: "덕성글로벌파트너십",
+    category: "기타",
+    target: "8학기초과",
+    eligibility: "외국인특별전형 합격자 중 선발자",
+    benefit: "수업료 전액",
+  },
+  {
+    title: "최은경교수",
+    category: "기타",
+    target: "8학기초과",
+    eligibility: "영어영문학과 재학생 및 졸업생 중 자체 선발자",
+    benefit: "100만원",
+  },
+  {
+    title: "손유라",
+    category: "기타",
+    target: "8학기초과",
+    eligibility: "영어영문학과 재학생 중 자체 선발자",
+    benefit: "100만원",
+  },
+  {
+    title: "최쉬프리한미우호",
+    category: "기타",
+    target: "8학기초과",
+    eligibility: "영어영문학과 재학생 중 자체 선발자",
+    benefit: "100만원",
+  },
+  {
+    title: "최욱경교수",
+    category: "기타",
+    target: "8학기초과",
+    eligibility: "서양화과 재학생 중 가계 곤란 및 성적 우수 추천자",
+    benefit: "50만~100만원",
+  },
+  {
+    title: "서기준교수",
+    category: "기타",
+    target: "8학기초과",
+    eligibility: "회계학과 재학생 중 가계 곤란 및 성적 우수 추천자",
+    benefit: "100만원",
+  },
+  {
+    title: "특별(8학기초과)",
+    category: "기타",
+    target: "8학기초과",
+    eligibility: "총장 또는 장학위원회가 인정하는 학생",
+    benefit: "일정액",
+  },
+  {
+    title: "글로벌 프론티어",
+    category: "참여",
+    target: "8학기초과",
+    eligibility: "해외취업연수 이수 및 해외취업(인턴) 확정자",
+    benefit: "일정액",
+  },
+];
