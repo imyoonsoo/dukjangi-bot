@@ -2,13 +2,13 @@
 
 import Anthropic from "@anthropic-ai/sdk";
 import { SYSTEM_PROMPT, ERROR_MESSAGE } from "./persona";
-import { scholarShip } from "./scholarship";
+import { scholarship } from "./scholarship";
 
 const client = new Anthropic();
 
-// 함수 toContext 역할: LLM은 프롬프트에 담긴 글자만 보고, 답할 수 있기에 scholarShip 데이터 텍스트화
+// 함수 toContext 역할: LLM은 프롬프트에 담긴 글자만 보고, 답할 수 있기에 scholarship 데이터 텍스트화
 function toContext() {
-  return scholarShip
+  return scholarship
     .map((s) => {
       // 출력형식 및 필수 파라미터: 자격요건, 혜택
       const output = [

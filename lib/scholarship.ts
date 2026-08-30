@@ -1,12 +1,12 @@
 // 교내장학금 데이터 (공식 홈페이지 기준)
 
-export type scholarshipCategory = "성적" | "가계" | "참여" | "기타";
-export type scholarshipTarget = "신입생" | "재학생" | "8학기초과";
+export type ScholarshipCategory = "성적" | "가계" | "참여" | "기타";
+export type ScholarshipTarget = "신입생" | "재학생" | "8학기초과";
 
 export interface Scholarship {
   title: string; // 장학금명
-  category: scholarshipCategory; // 분류
-  target: scholarshipTarget; // 대상
+  category: ScholarshipCategory; // 분류
+  target: ScholarshipTarget; // 대상
   eligibility: string; // 자격요건
   benefit: string; // 혜택
   selectionType?: "자동" | "신청"; // 신청조건
@@ -16,7 +16,7 @@ export interface Scholarship {
   note?: string; // 비고
 }
 
-export const scholarShip: Scholarship[] = [
+export const scholarship: Scholarship[] = [
   // 신입생
   {
     title: "운현장학금",
