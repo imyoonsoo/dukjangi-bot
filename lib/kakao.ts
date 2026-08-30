@@ -13,15 +13,27 @@ export function extractUtterance(body: unknown): string {
   const request = body as KakaoRequest;
   const utterance = request?.userRequest?.utterance;
   if (typeof utterance !== "string") return "";
-  return utterance.trim();
+  return utterance.trim().slice(0, 1000);
 }
 
-// 요청 본문에서 콜백 주소(callbackUrl)만 꺼냄. 없으면 null
+function isKakaoHost(hostname: string): boolean {
+  return hostname === "kakao.com" || hostname.endsWith(".kakao.com");
+}
+
+// 요청 바디의 URL을 그대로 fetch하면 SSRF 위험이라 카카오 도메인만 허용
 export function extractCallbackUrl(body: unknown): string | null {
   const request = body as KakaoRequest;
   const callbackUrl = request?.userRequest?.callbackUrl;
   if (typeof callbackUrl !== "string") return null;
-  return callbackUrl;
+
+  try {
+    const { protocol, hostname } = new URL(callbackUrl);
+    if (protocol !== "https:") return null;
+    if (!isKakaoHost(hostname)) return null;
+    return callbackUrl;
+  } catch {
+    return null;
+  }
 }
 
 // 답을 바로 줄 때
