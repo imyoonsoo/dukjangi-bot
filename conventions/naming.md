@@ -26,7 +26,7 @@
 
 - 예: `ic-arrow.svg`, `img-hero.jpg`
 - 최적화는 Next `next/image`가 WebP로 자동 변환, 원본은 PNG/JPG로 둠
-- 위치: `public/` (정적 서빙) 또는 `assets/` (import용)
+- 위치: `public/`, import해서 쓸 게 생기면 `assets/` 검토
 
 ## 코드 심볼
 

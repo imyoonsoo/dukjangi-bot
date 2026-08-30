@@ -34,6 +34,7 @@ dukjangi-bot/
 - 흐름: `page.tsx`(클라이언트) ➝ `fetch("/api/chat")` ➝ `route.ts`(서버) ➝ `lib/llm.ts`
 - 클라이언트는 `lib/llm.ts`를 직접 import 안 함, HTTP 경계를 거쳐 API 키를 서버에 가둠
 
-## 성장 시
+## 확장 시
 
-- 도메인이 3개 이상으로 늘면 `features/<domain>/` 도입 검토 (지금은 장학금 상담 1개라 불필요)
+- 도메인이 3개 이상으로 늘면 `features/<domain>/` 도입 검토
+- import해서 쓰는 이미지가 생기면 `assets/` 도입 검토
