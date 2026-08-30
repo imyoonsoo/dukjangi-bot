@@ -1,1 +1,5 @@
 * text=auto eol=lf
+
+eslint.config.mjs   linguist-detectable=false
+postcss.config.mjs  linguist-detectable=false
+package-lock.json   linguist-generated=true
