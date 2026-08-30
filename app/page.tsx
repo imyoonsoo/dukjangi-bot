@@ -86,7 +86,12 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex-1 space-y-4 overflow-y-auto px-5 py-6 scrollbar-gutter-stable">
+        <div
+          role="log"
+          aria-live="polite"
+          aria-relevant="additions"
+          className="flex-1 space-y-4 overflow-y-auto px-5 py-6 scrollbar-gutter-stable"
+        >
           {messages.map((m, i) => (
             <div
               key={i}
@@ -130,7 +135,10 @@ export default function Home() {
           )}
 
           {loading && (
-            <div className="flex items-center gap-2 text-base text-sky">
+            <div
+              role="status"
+              className="flex items-center gap-2 text-base text-sky"
+            >
               <span className="flex gap-1">
                 <span className="dot h-1.5 w-1.5 rounded-full bg-sky" />
                 <span className="dot h-1.5 w-1.5 rounded-full bg-sky" />
@@ -153,6 +161,7 @@ export default function Home() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="무엇이 궁금하신가요?"
+            aria-label="질문 입력"
             disabled={loading}
           />
           <button
