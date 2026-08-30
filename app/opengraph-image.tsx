@@ -7,10 +7,15 @@ export const alt = "덕장이, 덕성여자대학교 교내장학금 안내 LLM 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// 카드 텍스트용 서브셋 폰트
-const pretendardBold = await readFile(
-  join(process.cwd(), "public/assets/Pretendard-Bold-subset.otf"),
-);
+// 카드 텍스트용 서브셋 폰트, 실패 시 시스템 폰트로 폴백
+let pretendardBold: Buffer | null = null;
+try {
+  pretendardBold = await readFile(
+    join(process.cwd(), "public/assets/pretendard-bold-subset.otf"),
+  );
+} catch (err) {
+  console.error("OG 폰트 로드 실패:", err);
+}
 
 // 프로필이미지, 없을 시 텍스트만 보이기
 let ogImage: string | null = null;
@@ -94,14 +99,16 @@ export default function Image() {
     </div>,
     {
       ...size,
-      fonts: [
-        {
-          name: "Pretendard",
-          data: pretendardBold,
-          weight: 700,
-          style: "normal",
-        },
-      ],
+      fonts: pretendardBold
+        ? [
+            {
+              name: "Pretendard",
+              data: pretendardBold,
+              weight: 700,
+              style: "normal",
+            },
+          ]
+        : [],
     },
   );
 }
