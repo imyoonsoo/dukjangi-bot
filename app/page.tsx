@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import {
@@ -22,6 +22,26 @@ export default function Home() {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const stickToBottom = useRef(true);
+
+  // 대화를 따라가는 중인지 기록
+  function handleScroll() {
+    const container = scrollRef.current;
+    if (!container) return;
+    const distanceFromBottom =
+      container.scrollHeight - container.scrollTop - container.clientHeight;
+    stickToBottom.current = distanceFromBottom < 120;
+  }
+
+  // 따라가는 중이면 새 메시지로 스크롤
+  useEffect(() => {
+    if (stickToBottom.current) {
+      bottomRef.current?.scrollIntoView();
+    }
+  }, [messages, loading]);
 
   // 전송: /api/chat 호출 ➝ 메시지 목록에 답변 추가
   async function send(text: string) {
@@ -87,6 +107,8 @@ export default function Home() {
         </div>
 
         <div
+          ref={scrollRef}
+          onScroll={handleScroll}
           role="log"
           aria-live="polite"
           aria-relevant="additions"
@@ -147,6 +169,8 @@ export default function Home() {
               {THINKING_MESSAGE}
             </div>
           )}
+
+          <div ref={bottomRef} />
         </div>
 
         <form
