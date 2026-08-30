@@ -17,7 +17,10 @@ const siteUrl =
   (vercelHost ? `https://${vercelHost}` : "http://localhost:3000");
 
 export const viewport: Viewport = {
-  themeColor: "#13294b",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#13294b" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b1830" },
+  ],
 };
 
 const OG_TITLE = "교내장학금 안내 LLM 챗봇, 덕장이";
@@ -26,7 +29,7 @@ const OG_DESCRIPTION = "받을 수 있는 교내장학금, 놓치지 않게";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "덕장이",
-  description: "LLM 기반 덕성여대 교내장학금 안내 안내 챗봇",
+  description: "LLM 기반 덕성여대 교내장학금 안내 챗봇",
   openGraph: {
     title: OG_TITLE,
     description: OG_DESCRIPTION,
