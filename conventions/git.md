@@ -38,7 +38,7 @@ Conventional Commits + commitlint(`@commitlint/config-conventional`) 검사
 | `<type>/*` | 작업 브랜치, `develop`에서 따서 `develop`으로 |
 
 - prefix는 커밋 type을 따름 (`feature/`, `fix/`, `docs/`, `chore/` …), 정통 git flow의 `feature` 단일 prefix 아님
-- 이름: `<type>/<작업-내용-kebab-case>` (예: `feature/llm-integration`, `docs/conventions`)
+- 이름: `<type>/<작업-내용-kebab-case>` (예: `feature/web-chat`, `fix/login-error`)
 - `develop`: PR 권장, 작거나 급한 변경은 로컬에서 직접 push 허용
 - `main`: `develop` 머지로만 갱신, 직접 커밋/push 안 함
 
