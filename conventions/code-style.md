@@ -16,6 +16,64 @@
 - 줄 끝 공백 없음
 - 손으로 맞추지 말고 저장 시 포맷 / 커밋 훅에 맡기기
 
+## 네이밍
+
+### 폴더 이름
+
+- 소문자 + kebab-case: `components`, `api`, `kakao-skill`
+- 약속된 이름은 그대로: `node_modules`, `app`, `lib`
+
+### 파일 이름
+
+| 종류           | 규칙              | 예시                                 |
+| -------------- | ----------------- | ------------------------------------ |
+| React 컴포넌트 | PascalCase        | `ChatBox.tsx`, `MessageList.tsx`     |
+| 그 외 모듈     | kebab-case        | `kakao.ts`, `scholarship.ts`         |
+| Next 예약 파일 | 소문자 고정       | `page.tsx`, `layout.tsx`, `route.ts` |
+| 커스텀 훅      | `use` + camelCase | `useChat.ts`                         |
+
+- 현재 `lib/` 파일은 단어 하나라 소문자, 두 단어 이상이면 kebab-case (`kakao-client.ts`)
+
+### 정적 파일
+
+| 용도      | 포맷   | 이름                      | 이유                            |
+| --------- | ------ | ------------------------- | ------------------------------- |
+| 아이콘    | `.svg` | `ic-` 접두사, kebab-case  | 확대해도 안 깨짐, CSS로 색 변경 |
+| 사진      | `.jpg` | `img-` 접두사, kebab-case | 압축률 좋음                     |
+| 투명 배경 | `.png` | `img-` 접두사, kebab-case | 투명도 지원                     |
+
+- 예: `ic-arrow.svg`, `img-hero.jpg`
+- 최적화는 Next `next/image`가 WebP로 자동 변환, 원본은 PNG/JPG로 둠
+- 위치: `public/`, import해서 쓸 게 생기면 `assets/` 검토
+
+### 변수 / 함수 / 타입
+
+| 종류                       | 규칙                 | 예시                             |
+| -------------------------- | -------------------- | -------------------------------- |
+| 변수 / 함수 / props        | camelCase            | `userText`, `generateReply`      |
+| React 컴포넌트 / 함수      | PascalCase           | `ChatBox`                        |
+| 상수 (모듈 레벨 고정값)    | SCREAMING_SNAKE_CASE | `SYSTEM_PROMPT`, `ERROR_MESSAGE` |
+| 타입 / 인터페이스          | PascalCase           | `Scholarship`                    |
+| 불리언 변수                | `is` / `has` 접두사  | `isLoading`, `hasError`          |
+| 이벤트 핸들러 (정의)       | `handle` 접두사      | `handleSubmit`                   |
+| 이벤트 핸들러 (props 전달) | `on` 접두사          | `onSubmit`                       |
+
+### 상수 값 집합
+
+`as const`로 관리
+
+```ts
+const ROLE = {
+  user: "user",
+  bot: "bot",
+} as const;
+```
+
+### 함수 이름
+
+- 동사로 시작: `getScholarships`, `formatText`, `sendCallback`
+- 데이터를 만들어 반환하는 함수는 `build` / `format` / `to` 접두사
+
 ## 함수 선언방식
 
 - 모듈 최상위 함수, React 컴포넌트 ➝ 함수 선언식(`function`)
@@ -26,7 +84,7 @@
   ```
 - 함수 내부(콜백, 핸들러) ➝ 화살표 함수
   ```ts
-  scholarShip.map((s) => s.title);
+  scholarship.map((s) => s.title);
   const handleSubmit = () => { ... };
   ```
 
