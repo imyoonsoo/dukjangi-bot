@@ -1,5 +1,7 @@
 // 덕장이봇 페르소나
 
+import "server-only";
+
 export const DATA_AS_OF = "2026년 8월";
 
 export const SCHOLARSHIP_BOARD_URL =
@@ -28,12 +30,3 @@ export const SYSTEM_PROMPT = `
 - URL을 안내할 때는 반드시 [안내 텍스트](URL) 마크다운 링크 형식으로 써. 맨 URL만 쓰지 마.
 - 답변 끝에는 참고용 안내를 한 번 덧붙여. 매번 똑같이 복사하지 말고 상황에 맞게 자연스럽게 풀어서: ${NOTICE}
 `.trim();
-
-export const THINKING_MESSAGE =
-  "관련 장학금 정보를 찾고 있어요... 조금만 기다려주세요!";
-
-export const ERROR_MESSAGE =
-  "앗, 답변을 불러오다가 문제가 발생했어요. 잠시 후 다시 시도해주세요.";
-
-export const GREETING_MESSAGE =
-  "반가워요, 덕장이예요🙌 받을 수 있는 교내장학금, 놓치지 않게 도와드릴게요.";

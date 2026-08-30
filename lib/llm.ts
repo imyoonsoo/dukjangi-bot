@@ -1,7 +1,9 @@
 // LLM(Claude): 웹/카카오톡 공용
 
+import "server-only";
 import Anthropic from "@anthropic-ai/sdk";
-import { SYSTEM_PROMPT, ERROR_MESSAGE } from "./persona";
+import { SYSTEM_PROMPT } from "./persona";
+import { ERROR_MESSAGE } from "./messages";
 import { scholarship } from "./scholarship";
 
 const client = new Anthropic();
