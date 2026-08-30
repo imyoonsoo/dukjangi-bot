@@ -1,5 +1,6 @@
 // 교내장학금 데이터 (공식 홈페이지 기준)
 
+import "server-only";
 export type ScholarshipCategory = "성적" | "가계" | "참여" | "기타";
 export type ScholarshipTarget = "신입생" | "재학생" | "8학기초과";
 

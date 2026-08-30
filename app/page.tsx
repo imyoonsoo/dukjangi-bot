@@ -8,7 +8,7 @@ import {
   THINKING_MESSAGE,
   ERROR_MESSAGE,
   GREETING_MESSAGE,
-} from "@/lib/persona";
+} from "@/lib/messages";
 
 type Message = { role: "user" | "bot"; text: string };
 

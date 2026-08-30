@@ -1,5 +1,6 @@
 // 카카오 스킬 연동 헬퍼
 
+import "server-only";
 // 카카오가 보내는 요청 본문
 type KakaoRequest = {
   userRequest?: {
