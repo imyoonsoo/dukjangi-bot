@@ -1,13 +1,14 @@
-// 웹채팅 API: POST
+// 웹채팅 API
 import { ask } from "@/lib/llm";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
-  const msg = body?.message;
+  const msg = typeof body?.message === "string" ? body.message.trim() : "";
 
-  if (typeof msg !== "string" || !msg.trim()) {
+  // 빈 값이나 1000자 초과 입력 반려
+  if (!msg || msg.length > 1000) {
     return Response.json(
-      { error: "유효한 message가 필요합니다" },
+      { error: "message는 1-1000자 이내여야 합니다" },
       { status: 400 },
     );
   }
