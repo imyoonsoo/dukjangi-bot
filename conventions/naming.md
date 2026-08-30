@@ -55,8 +55,3 @@ const ROLE = {
 
 - 동사로 시작: `getScholarships`, `formatText`, `sendCallback`
 - 데이터를 만들어 반환하는 함수는 `build` / `format` / `to` 접두사
-
-## 배열 vs 단수
-
-- 여러 개를 담는 값은 복수형: `scholarships`, `messages`
-- 현재 `scholarShip`은 의도적으로 둔 이름, 새 코드는 복수형 권장
