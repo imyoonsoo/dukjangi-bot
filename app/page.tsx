@@ -73,7 +73,7 @@ export default function Home() {
       <div className="flex max-h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-line bg-white">
         <header className="flex items-center gap-3 border-b border-line px-5 py-4">
           <Image
-            src="/icon.png"
+            src="/assets/img-profile-web.png"
             alt="덕장이"
             width={40}
             height={40}
