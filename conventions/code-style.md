@@ -58,23 +58,12 @@
 | 이벤트 핸들러 (정의)       | `handle` 접두사      | `handleSubmit`                   |
 | 이벤트 핸들러 (props 전달) | `on` 접두사          | `onSubmit`                       |
 
-### 상수 값 집합
-
-`as const`로 관리
-
-```ts
-const ROLE = {
-  user: "user",
-  bot: "bot",
-} as const;
-```
-
 ### 함수 이름
 
-- 동사로 시작: `getScholarships`, `formatText`, `sendCallback`
+- 변수는 명사, 함수는 동사로 시작. 이름만으로 값인지 동작인지 구분됨 (`getScholarships`, `formatText`, `sendCallback`)
 - 데이터를 만들어 반환하는 함수는 `build` / `format` / `to` 접두사
 
-## 함수 선언방식
+## 함수 선언
 
 - 모듈 최상위 함수, React 컴포넌트 ➝ 함수 선언식(`function`)
   ```ts
@@ -88,7 +77,7 @@ const ROLE = {
   const handleSubmit = () => { ... };
   ```
 
-## export 방식
+## export
 
 - Next 예약 파일(`page`, `layout`, `route` 핸들러 등)은 강제되는 형태를 따름
   - `page` / `layout`: `export default`
@@ -98,7 +87,12 @@ const ROLE = {
 
 - Props/객체 모양은 `interface` 기본, 유니언/별칭이 필요하면 `type`
 - `any` 금지, `unknown`은 잡은 에러(`catch (err)`) 등 불가피한 곳에서만 쓰고 즉시 좁히기
+- 유니언은 타입 가드(`x is T`)로 좁히기 우선, `as` 단언은 최소화
 - SDK가 제공하는 타입 사용, 같은 모양을 다시 정의하지 않기 (`Anthropic.MessageParam`, `Anthropic.TextBlock` 등)
+- 고정 값 목록은 `as const` 객체 우선, 이유 있으면 `enum`도 허용
+  ```ts
+  const ROLE = { user: "user", bot: "bot" } as const;
+  ```
 
 ## import
 
@@ -113,11 +107,7 @@ const ROLE = {
 - 원인 로깅은 `console.error` (추후 구조화 로거 / 에러 트래커 도입 여지)
 - 기술적 상세(스택 등)를 사용자 응답에 노출하지 않기
 
-## 조건부 렌더링 (React)
-
-- 간단한 경우만 `조건 && <JSX>`
-- 분기가 길어지면 별도 컴포넌트/함수로 분리
-
 ## JSX
 
 - `.tsx` / `.jsx` 파일에서만 작성, `.ts`에 JSX 금지
+- 조건부 렌더링은 간단할 때만 `조건 && <JSX>`, 길어지면 컴포넌트/함수로 분리
