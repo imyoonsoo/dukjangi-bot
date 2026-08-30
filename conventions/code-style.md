@@ -86,7 +86,7 @@
 ## 타입
 
 - Props/객체 모양은 `interface` 기본, 유니언/별칭이 필요하면 `type`
-- `any` 금지, `unknown`은 잡은 에러(`catch (err)`) 등 불가피한 곳에서만 쓰고 즉시 좁히기
+- `any` 금지 (ESLint `no-explicit-any`로 강제), `unknown`은 잡은 에러(`catch (err)`) 등 불가피한 곳에서만 쓰고 즉시 좁히기
 - 유니언은 타입 가드(`x is T`)로 좁히기 우선, `as` 단언은 최소화
 - SDK가 제공하는 타입 사용, 같은 모양을 다시 정의하지 않기 (`Anthropic.MessageParam`, `Anthropic.TextBlock` 등)
 - 고정 값 목록은 `as const` 객체 우선, 이유 있으면 `enum`도 허용
@@ -111,3 +111,9 @@
 
 - `.tsx` / `.jsx` 파일에서만 작성, `.ts`에 JSX 금지
 - 조건부 렌더링은 간단할 때만 `조건 && <JSX>`, 길어지면 컴포넌트/함수로 분리
+
+## 접근성
+
+- 인터랙티브 요소는 시맨틱 태그 우선 (`<button>`, `<label>`)
+- 이미지에 `alt`, placeholder로 라벨 대신하지 않기
+- 실시간 갱신 영역(채팅 등)은 `aria-live`, 로딩 상태는 `role="status"`
