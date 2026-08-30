@@ -31,7 +31,9 @@ export async function POST(request: Request) {
     return Response.json(callbackResponse(THINKING_MESSAGE));
   }
 
-  // callbackUrl 없으면: 그냥 기다렸다가 바로 응답
-  const reply = await ask(utterance);
-  return Response.json(simpleText(stripMarkdown(reply)));
+  // 카카오 5초 제한으로 콜백 미설정 시 LLM 응답을 못 주어 안내문구 반환
+  console.warn("카카오 스킬 콜백 미설정");
+  return Response.json(
+    simpleText("일시적으로 답변이 어려워요. 잠시 후 다시 시도해 주세요."),
+  );
 }
