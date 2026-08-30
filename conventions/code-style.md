@@ -1,4 +1,4 @@
-# 컨벤션: 코드스타일
+# 코드 스타일
 
 겉모양(따옴표, 세미콜론, 들여쓰기 등)은 Prettier, 코드 품질 규칙은 ESLint 담당
 커밋 시 `lint-staged`가 `eslint --fix` + `prettier --write` 자동 실행
@@ -20,19 +20,19 @@
 
 ### 폴더 이름
 
-- 소문자 + kebab-case: `components`, `api`, `kakao-skill`
+- 소문자 + kebab-case: `components`, `api`, `user-profile`
 - 약속된 이름은 그대로: `node_modules`, `app`, `lib`
 
 ### 파일 이름
 
 | 종류           | 규칙              | 예시                                 |
 | -------------- | ----------------- | ------------------------------------ |
-| React 컴포넌트 | PascalCase        | `ChatBox.tsx`, `MessageList.tsx`     |
-| 그 외 모듈     | kebab-case        | `kakao.ts`, `scholarship.ts`         |
+| React 컴포넌트 | PascalCase        | `Button.tsx`, `MessageList.tsx`      |
+| 그 외 모듈     | kebab-case        | `api-client.ts`, `date-utils.ts`     |
 | Next 예약 파일 | 소문자 고정       | `page.tsx`, `layout.tsx`, `route.ts` |
 | 커스텀 훅      | `use` + camelCase | `useChat.ts`                         |
 
-- 현재 `lib/` 파일은 단어 하나라 소문자, 두 단어 이상이면 kebab-case (`kakao-client.ts`)
+- 단어 하나면 소문자, 두 단어 이상이면 kebab-case (`api-client.ts`)
 
 ### 정적 파일
 
@@ -48,32 +48,32 @@
 
 ### 변수 / 함수 / 타입
 
-| 종류                       | 규칙                 | 예시                             |
-| -------------------------- | -------------------- | -------------------------------- |
-| 변수 / 함수 / props        | camelCase            | `userText`, `generateReply`      |
-| React 컴포넌트 / 함수      | PascalCase           | `ChatBox`                        |
-| 상수 (모듈 레벨 고정값)    | SCREAMING_SNAKE_CASE | `SYSTEM_PROMPT`, `ERROR_MESSAGE` |
-| 타입 / 인터페이스          | PascalCase           | `Scholarship`                    |
-| 불리언 변수                | `is` / `has` 접두사  | `isLoading`, `hasError`          |
-| 이벤트 핸들러 (정의)       | `handle` 접두사      | `handleSubmit`                   |
-| 이벤트 핸들러 (props 전달) | `on` 접두사          | `onSubmit`                       |
+| 종류                       | 규칙                 | 예시                          |
+| -------------------------- | -------------------- | ----------------------------- |
+| 변수 / 함수 / props        | camelCase            | `userName`, `fetchData`       |
+| React 컴포넌트 / 함수      | PascalCase           | `Button`                      |
+| 상수 (모듈 레벨 고정값)    | SCREAMING_SNAKE_CASE | `MAX_RETRY`, `DEFAULT_LOCALE` |
+| 타입 / 인터페이스          | PascalCase           | `User`                        |
+| 불리언 변수                | `is` / `has` 접두사  | `isLoading`, `hasError`       |
+| 이벤트 핸들러 (정의)       | `handle` 접두사      | `handleSubmit`                |
+| 이벤트 핸들러 (props 전달) | `on` 접두사          | `onSubmit`                    |
 
 ### 함수 이름
 
-- 변수는 명사, 함수는 동사로 시작. 이름만으로 값인지 동작인지 구분됨 (`getScholarships`, `formatText`, `sendCallback`)
+- 변수는 명사, 함수는 동사로 시작. 이름만으로 값인지 동작인지 구분됨 (`getUsers`, `formatDate`, `sendRequest`)
 - 데이터를 만들어 반환하는 함수는 `build` / `format` / `to` 접두사
 
 ## 함수 선언
 
 - 모듈 최상위 함수, React 컴포넌트 ➝ 함수 선언식(`function`)
   ```ts
-  function toText() { ... }
-  export async function generateReply(userText: string): Promise<string> { ... }
-  export default function Home() { ... }
+  function toJson() { ... }
+  export async function fetchUser(id: string): Promise<User> { ... }
+  export default function Page() { ... }
   ```
 - 함수 내부(콜백, 핸들러) ➝ 화살표 함수
   ```ts
-  scholarship.map((s) => s.title);
+  items.map((item) => item.name);
   const handleSubmit = () => { ... };
   ```
 
@@ -97,7 +97,7 @@
 ## import
 
 - 확장자(`.ts`, `.tsx`) 안 붙임
-- alias `@/*` 사용 가능, 가까운 경로는 상대경로(`./persona`)도 허용
+- alias `@/*` 사용 가능, 가까운 경로는 상대경로(`./utils`)도 허용
 - 순서: 외부 패키지 ➝ 내부 모듈(alias) ➝ 상대경로
 
 ## 에러 처리
