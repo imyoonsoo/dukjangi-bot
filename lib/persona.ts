@@ -1,6 +1,6 @@
-import "server-only";
-
 // 덕장이봇 페르소나
+
+import "server-only";
 
 export const DATA_AS_OF = "2026년 8월";
 
