@@ -38,3 +38,4 @@ dukjangi-bot/
 
 - 도메인이 3개 이상으로 늘면 `features/<domain>/` 도입 검토
 - import해서 쓰는 이미지가 생기면 `assets/` 도입 검토
+- 테스트 도입 시 순수 로직은 co-location (`kakao.test.ts`), Vitest 검토
