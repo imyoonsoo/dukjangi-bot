@@ -51,11 +51,15 @@ export function callbackResponse(text: string) {
 // 미뤄둔 진짜 답을 완성 후 따로 전송
 export async function sendCallback(url: string, text: string): Promise<void> {
   try {
-    await fetch(url, {
+    const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(simpleText(text)),
     });
+    // fetch는 4xx, 5xx 응답에도 성공 처리라 상태 코드 별도 확인
+    if (!response.ok) {
+      console.error(`카카오 콜백 전송 실패: status ${response.status}`);
+    }
   } catch (error) {
     console.error("카카오 콜백 전송 실패:", error);
   }

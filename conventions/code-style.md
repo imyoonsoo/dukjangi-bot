@@ -102,7 +102,7 @@
 
 ## 에러 처리
 
-- 사용자에게 보일 문구는 `lib/persona.ts` 상수(`ERROR_MESSAGE` 등)
+- 사용자에게 보일 문구는 상수로 분리: 서버 전용 문구(시스템 프롬프트 등)는 `lib/persona.ts`, 클라이언트에서도 쓰는 문구(`ERROR_MESSAGE` 등)는 `lib/messages.ts`
 - 서버 로직은 `try/catch`로 감싸고 실패 시 사용자 문구 반환
 - 원인 로깅은 `console.error` (추후 구조화 로거 / 에러 트래커 도입 여지)
 - 기술적 상세(스택 등)를 사용자 응답에 노출하지 않기

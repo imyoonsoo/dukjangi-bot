@@ -14,7 +14,8 @@ dukjangi-bot/
 │
 ├── lib/
 │   ├── llm.ts                    # 웹/카톡 공용 LLM 호출
-│   ├── persona.ts                # 시스템 프롬프트/안내문구
+│   ├── persona.ts                # 시스템 프롬프트, 서버 전용 안내문구 (server-only)
+│   ├── messages.ts               # 웹/카톡 공용 안내문구 (server-only 미포함)
 │   ├── scholarship.ts            # 장학금 데이터
 │   └── kakao.ts                  # 카카오 요청/응답 헬퍼
 │
