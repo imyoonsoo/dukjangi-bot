@@ -1,27 +1,19 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import {
-  THINKING_MESSAGE,
-  ERROR_MESSAGE,
-  GREETING_MESSAGE,
-} from "@/lib/messages";
-
-type Message = { role: "user" | "bot"; text: string };
+import { THINKING_MESSAGE } from "@/lib/chat";
+import { useChat } from "@/lib/useChat";
+import { Header } from "./_components/Header";
 
 const EXAMPLES = ["교내장학금 뭐 있나요", "ICAN마일리지", "성적우수, 향상"];
 
 const CATEGORIES = ["가계", "성적", "참여", "기타"] as const;
 
 export default function Home() {
-  const [messages, setMessages] = useState<Message[]>([
-    { role: "bot", text: GREETING_MESSAGE },
-  ]);
+  const { messages, loading, sendChat, startChat, hasHistory } = useChat();
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -43,52 +35,14 @@ export default function Home() {
     }
   }, [messages, loading]);
 
-  // 전송: /api/chat 호출 ➝ 메시지 목록에 답변 추가
-  async function send(text: string) {
-    const trimmed = text.trim();
-    if (!trimmed || loading) return;
-
-    setMessages((prev) => [...prev, { role: "user", text: trimmed }]);
-    setInput("");
-    setLoading(true);
-
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: trimmed }),
-      });
-      const data = await response.json();
-      const reply = response.ok ? data.reply : ERROR_MESSAGE;
-      setMessages((prev) => [...prev, { role: "bot", text: reply }]);
-    } catch {
-      setMessages((prev) => [...prev, { role: "bot", text: ERROR_MESSAGE }]);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   return (
     <main className="mx-auto flex h-full w-full max-w-2xl flex-col justify-center p-4 sm:p-6">
       <div className="flex max-h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-line bg-white">
-        <header className="flex items-center gap-3 border-b border-line px-5 py-4">
-          <Image
-            src="/assets/img-profile-web.png"
-            alt="덕장이"
-            width={40}
-            height={40}
-            className="rounded-full"
-            priority
-          />
-          <div>
-            <h1 className="text-lg font-semibold tracking-tight text-navy">
-              덕장이
-            </h1>
-            <p className="text-sm text-sub">
-              LLM 기반 덕성여자대학교 교내장학금 안내 챗봇
-            </p>
-          </div>
-        </header>
+        <Header
+          hasHistory={hasHistory}
+          disabled={loading}
+          onNewChat={startChat}
+        />
 
         <div className="border-b border-line px-5 py-2.5">
           <p className="mb-2 text-sm font-medium text-sub">카테고리 훑어보기</p>
@@ -96,7 +50,7 @@ export default function Home() {
             {CATEGORIES.map((cat) => (
               <button
                 key={cat}
-                onClick={() => send(`${cat} 장학금 알려줘`)}
+                onClick={() => sendChat(`${cat} 장학금 알려줘`)}
                 disabled={loading}
                 className="flex-1 rounded-full bg-navy px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-sky focus-visible:ring-2 focus-visible:ring-sky/50 focus-visible:outline-none disabled:opacity-50"
               >
@@ -146,7 +100,7 @@ export default function Home() {
                 {EXAMPLES.map((ex) => (
                   <button
                     key={ex}
-                    onClick={() => send(ex)}
+                    onClick={() => sendChat(ex)}
                     className="rounded-full border border-line bg-canvas px-3.5 py-2 text-sm text-navy transition hover:border-sky hover:bg-white hover:shadow-sm"
                   >
                     {ex}
@@ -177,7 +131,8 @@ export default function Home() {
           className="flex gap-2 border-t border-line px-4 py-3"
           onSubmit={(e) => {
             e.preventDefault();
-            send(input);
+            sendChat(input);
+            setInput("");
           }}
         >
           <input
@@ -193,7 +148,7 @@ export default function Home() {
             className="rounded-xl bg-sky-deep px-5 py-3 text-base font-medium text-white transition hover:bg-navy active:scale-95 disabled:bg-sky-deep/25 disabled:text-white"
             disabled={loading || !input.trim()}
           >
-            보내기
+            전송
           </button>
         </form>
       </div>
