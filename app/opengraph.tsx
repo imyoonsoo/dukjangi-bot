@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-export const alt = "덕장이, 덕성여자대학교 교내장학금 안내 LLM 챗봇";
+export const alt = "LLM 기반 덕성여대 교내장학금 안내 챗봇";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -13,8 +13,8 @@ try {
   pretendardBold = await readFile(
     join(process.cwd(), "public/assets/pretendard-bold-subset.otf"),
   );
-} catch (err) {
-  console.error("OG 폰트 로드 실패:", err);
+} catch (error) {
+  console.error("OG 폰트 로드 실패:", error);
 }
 
 // 프로필이미지, 없을 시 텍스트만 보이기
@@ -68,32 +68,37 @@ export default function Image() {
         <div
           style={{
             display: "flex",
-            fontSize: 26,
+            fontSize: 28,
+            letterSpacing: 6,
             color: GOLD,
-            border: "1px solid rgba(232,185,107,0.45)",
-            padding: "8px 22px",
-            borderRadius: 999,
+            textTransform: "uppercase",
           }}
         >
-          덕성여자대학교
+          LLM Chatbot
         </div>
         <div
           style={{
             display: "flex",
-            fontSize: 150,
+            fontSize: 104,
             lineHeight: 1,
             letterSpacing: -2,
             color: "#ffffff",
-            marginTop: 26,
+            marginTop: 18,
           }}
         >
           덕장이
         </div>
-        <div style={{ display: "flex", fontSize: 44, marginTop: 24 }}>
-          <span style={{ color: "#b9c4d4", marginRight: 14 }}>
-            교내장학금 안내
-          </span>
-          <span style={{ color: GOLD }}>LLM 챗봇</span>
+        <div
+          style={{
+            display: "flex",
+            maxWidth: 520,
+            fontSize: 38,
+            lineHeight: 1.35,
+            color: "#b9c4d4",
+            marginTop: 22,
+          }}
+        >
+          LLM 기반 덕성여대 교내장학금 안내 챗봇
         </div>
       </div>
     </div>,
