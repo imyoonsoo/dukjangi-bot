@@ -3,7 +3,7 @@
 import "server-only";
 import Anthropic from "@anthropic-ai/sdk";
 import { SYSTEM_PROMPT } from "./persona";
-import { ERROR_MESSAGE } from "./messages";
+import { ERROR_MESSAGE } from "./chat";
 import { scholarship } from "./scholarship";
 
 const client = new Anthropic();
