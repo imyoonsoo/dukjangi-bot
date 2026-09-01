@@ -29,7 +29,7 @@ export function useChat() {
   }, [messages]);
 
   // 채팅 보내기
-  async function sendChat(text: string) {
+  const sendChat = async (text: string) => {
     const trimmedChat = text.trim();
     if (!trimmedChat || loading) return;
 
@@ -50,10 +50,10 @@ export function useChat() {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   // 새 대화 생성 시
-  const newChat = () => {
+  const startChat = () => {
     setMessages([{ role: "bot", text: GREETING_MESSAGE }]);
   };
 
@@ -61,7 +61,7 @@ export function useChat() {
     messages,
     loading,
     sendChat,
-    newChat,
+    startChat,
     hasHistory: messages.length > 1,
   };
 }
