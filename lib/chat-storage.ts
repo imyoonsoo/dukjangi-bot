@@ -8,8 +8,14 @@ export function loadChat(): Message[] | null {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (!saved) return null;
-    const data = JSON.parse(saved) as Message[];
-    return Array.isArray(data) && data.length > 0 ? data : null;
+    const data = JSON.parse(saved);
+    if (!Array.isArray(data) || data.length === 0) return null;
+    const valid = data.every(
+      (m) =>
+        (m?.role === "user" || m?.role === "bot") &&
+        typeof m?.text === "string",
+    );
+    return valid ? (data as Message[]) : null;
   } catch {
     return null;
   }
