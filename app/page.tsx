@@ -12,7 +12,7 @@ const EXAMPLES = ["교내장학금 뭐 있나요", "ICAN마일리지", "성적�
 const CATEGORIES = ["가계", "성적", "참여", "기타"] as const;
 
 export default function Home() {
-  const { messages, loading, sendChat, newChat, hasHistory } = useChat();
+  const { messages, loading, sendChat, startChat, hasHistory } = useChat();
   const [input, setInput] = useState("");
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -41,7 +41,7 @@ export default function Home() {
         <Header
           hasHistory={hasHistory}
           disabled={loading}
-          onNewChat={newChat}
+          onNewChat={startChat}
         />
 
         <div className="border-b border-line px-5 py-2.5">
@@ -148,7 +148,7 @@ export default function Home() {
             className="rounded-xl bg-sky-deep px-5 py-3 text-base font-medium text-white transition hover:bg-navy active:scale-95 disabled:bg-sky-deep/25 disabled:text-white"
             disabled={loading || !input.trim()}
           >
-            보내기
+            전송
           </button>
         </form>
       </div>
