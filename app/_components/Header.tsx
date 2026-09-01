@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { Plus } from "lucide-react";
-import profile from "@/public/assets/img-profile-web.png";
 
 interface HeaderProps {
   hasHistory: boolean;
@@ -14,7 +13,7 @@ export function Header({ hasHistory, disabled, onNewChat }: HeaderProps) {
   return (
     <header className="flex items-center gap-3 border-b border-line px-5 py-4">
       <Image
-        src={profile}
+        src="/assets/img-profile-web.png"
         alt="프로필"
         width={60}
         height={60}
