@@ -1,7 +1,8 @@
-// 안내문구
+// 웹채팅 메시지문구
 
-export const THINKING_MESSAGE =
-  "관련 장학금 정보를 찾고 있어요... 조금만 기다려주세요!";
+export type Message = { role: "user" | "bot"; text: string };
+
+export const THINKING_MESSAGE = "답변 생각 중...";
 
 export const ERROR_MESSAGE =
   "앗, 답변을 불러오다가 문제가 발생했어요. 잠시 후 다시 시도해주세요.";

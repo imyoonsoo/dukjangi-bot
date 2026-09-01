@@ -8,9 +8,8 @@ import {
   THINKING_MESSAGE,
   ERROR_MESSAGE,
   GREETING_MESSAGE,
-} from "@/lib/messages";
-
-type Message = { role: "user" | "bot"; text: string };
+  type Message,
+} from "@/lib/chat";
 
 const EXAMPLES = ["교내장학금 뭐 있나요", "ICAN마일리지", "성적우수, 향상"];
 
