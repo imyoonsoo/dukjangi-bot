@@ -28,6 +28,7 @@ Conventional Commits + commitlint(`@commitlint/config-conventional`) 검사
 | `test`     | 테스트 코드                          |
 | `ci`       | CI 설정 (GitHub Actions, husky 등)   |
 | `chore`    | 패키지/설정 등 그 외 작업            |
+| `release`  | 배포 관련                            |
 
 ## 브랜치 전략 (git flow 변형)
 
