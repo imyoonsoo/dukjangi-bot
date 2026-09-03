@@ -12,7 +12,6 @@ export function CopyButton({ text }: CopyButtonProps) {
   const Icon = isCopied ? Check : Copy;
   const label = isCopied ? "복사됨" : "복사하기";
 
-  // 복사하기 핸들러함수
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(text);
