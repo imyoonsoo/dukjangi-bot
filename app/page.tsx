@@ -88,6 +88,7 @@ export default function Home() {
                     </ReactMarkdown>
                   </div>
                 )}
+                {/* 인덱스 0은 항상 초기 인사말이라 복사 버튼 제외 */}
                 {i > 0 && (
                   <div
                     className={`opacity-0 transition group-hover:opacity-100 focus-within:opacity-100 [@media(hover:none)]:opacity-100 ${
