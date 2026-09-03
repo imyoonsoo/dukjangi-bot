@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import { THINKING_MESSAGE } from "@/lib/chat";
 import { useChat } from "@/lib/useChat";
 import { Header } from "./_components/Header";
+import { CopyButton } from "./_components/CopyButton";
 
 const EXAMPLES = ["교내장학금 뭐 있나요", "ICAN마일리지", "성적우수, 향상"];
 
@@ -75,7 +76,7 @@ export default function Home() {
                 m.role === "user" ? "justify-end" : "justify-start"
               }`}
             >
-              <div className="max-w-[85%]">
+              <div className="group max-w-[85%]">
                 {m.role === "user" ? (
                   <div className="whitespace-pre-wrap rounded-2xl rounded-br-md bg-navy px-4 py-3 text-base leading-relaxed text-white">
                     {m.text}
@@ -85,6 +86,15 @@ export default function Home() {
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {m.text}
                     </ReactMarkdown>
+                  </div>
+                )}
+                {i > 0 && (
+                  <div
+                    className={`opacity-0 transition group-hover:opacity-100 focus-within:opacity-100 [@media(hover:none)]:opacity-100 ${
+                      m.role === "user" ? "flex justify-end" : ""
+                    }`}
+                  >
+                    <CopyButton text={m.text} />
                   </div>
                 )}
               </div>
