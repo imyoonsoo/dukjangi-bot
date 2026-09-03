@@ -8,9 +8,9 @@ interface CopyButtonProps {
 }
 
 export function CopyButton({ text }: CopyButtonProps) {
-  const [isCopy, setIsCopy] = useState(false);
-  const Icon = isCopy ? Check : Copy;
-  const label = isCopy ? "복사됨" : "복사하기";
+  const [isCopied, setIsCopy] = useState(false);
+  const Icon = isCopied ? Check : Copy;
+  const label = isCopied ? "복사됨" : "복사하기";
 
   // 복사하기 핸들러함수
   const handleCopy = async () => {
@@ -33,7 +33,7 @@ export function CopyButton({ text }: CopyButtonProps) {
       <Icon size={14} aria-hidden />
       <span
         className={
-          isCopy
+          isCopied
             ? "inline"
             : "hidden group-hover/copy:inline group-focus-visible/copy:inline"
         }
