@@ -22,6 +22,7 @@
 
 - 소문자 + kebab-case: `components`, `api`, `user-profile`
 - 약속된 이름은 그대로: `node_modules`, `app`, `lib`
+- `app/` 안에서 라우트가 아닌 폴더는 `_` 접두사 (`_components`)
 
 ### 파일 이름
 
@@ -44,7 +45,9 @@
 
 - 예: `ic-arrow.svg`, `img-hero.jpg`
 - 최적화는 Next `next/image`가 WebP로 자동 변환, 원본은 PNG/JPG로 둠
-- 위치: `public/`, import해서 쓸 게 생기면 `assets/` 검토
+- 위치는 `public/`. 컴포넌트에서 쓰는 이미지는 `@/public/assets/...` 로 정적 import
+  (`image-types.d.ts` 가 `*.png` 등 타입 보장, `next/image` 가 실제 크기로 최적화)
+- URL 문자열 참조(`src="/assets/..."`)는 favicon이나 OG처럼 파일 자체가 필요한 곳만
 
 ### 변수 / 함수 / 타입
 
@@ -100,12 +103,20 @@
 - alias `@/*` 사용 가능, 가까운 경로는 상대경로(`./utils`)도 허용
 - 순서: 외부 패키지 ➝ 내부 모듈(alias) ➝ 상대경로
 
+## 외부 데이터 검증
+
+- 신뢰 경계에서 들어오는 데이터는 `as` 단언 금지, zod 런타임 검증 후 사용
+- 없어도 되는 데이터(localStorage 등)는 검증 실패 시 기본값으로 폴백
+- 처리 여부를 판단하는 요청 바디(API 라우트 body, 웹훅)는 검증 실패 시 400 등으로 즉시 거부
+- 스키마는 해당 도메인 모듈에 둠 (예: `features/chat/`)
+
 ## 에러 처리
 
-- 사용자에게 보일 문구는 상수로 분리: 서버 전용 문구(시스템 프롬프트 등)는 server-only `lib/` 모듈, 클라이언트에서도 쓰는 문구(`ERROR_MESSAGE` 등)는 server-only가 아닌 `lib/` 모듈
+- 사용자에게 보일 문구는 상수로 분리: 서버 전용 문구(시스템 프롬프트 등)는 server-only 모듈, 클라이언트에서도 쓰는 문구(`ERROR_MESSAGE` 등)는 해당 도메인 모듈(예: `features/chat/`)
 - 서버 로직은 `try/catch`로 감싸고 실패 시 사용자 문구 반환
 - 원인 로깅은 `console.error` (추후 구조화 로거 / 에러 트래커 도입 여지)
 - 기술적 상세(스택 등)를 사용자 응답에 노출하지 않기
+- 렌더 예외는 `app/error.tsx`로 폴백. 하위 세그먼트만 잡고 layout이나 라우트 핸들러 예외는 못 잡음
 
 ## JSX
 
