@@ -49,7 +49,7 @@ export function CopyButton({ text }: CopyButtonProps) {
       <Icon size={14} aria-hidden />
       <span
         className={
-          status === "idle"
+          copyStatus === "idle"
             ? "hidden group-hover/copy:inline group-focus-visible/copy:inline"
             : "inline"
         }
