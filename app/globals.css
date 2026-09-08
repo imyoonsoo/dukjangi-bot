@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 @plugin "@tailwindcss/typography";
 
 @theme {
@@ -10,7 +9,7 @@
   --color-sub: #5b6b7c;
   --color-canvas: #f4f7fa;
 
-  --font-sans: "Pretendard Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-pretendard), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
 }
 

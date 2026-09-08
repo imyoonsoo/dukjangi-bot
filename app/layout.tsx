@@ -1,10 +1,20 @@
 import type { Metadata, Viewport } from "next";
 import { Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+// 본문 폰트, preload 없이 비동기로 받고 로드 전까지 시스템 폰트로 표시
+const pretendard = localFont({
+  src: "./fonts/PretendardVariable.woff2",
+  variable: "--font-pretendard",
+  weight: "45 920",
+  display: "swap",
+  preload: false,
 });
 
 // 오픈그래프 이미지 절대경로용 배포 도메인
@@ -49,7 +59,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={`${geistMono.variable} h-full antialiased`}>
+    <html
+      lang="ko"
+      className={`${geistMono.variable} ${pretendard.variable} h-full antialiased`}
+    >
       <body className="h-full flex flex-col overflow-hidden">{children}</body>
     </html>
   );
