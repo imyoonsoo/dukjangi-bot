@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { type Message, ERROR_MESSAGE, GREETING_MESSAGE } from "@/lib/chat";
-import { loadChat, saveChat } from "@/lib/chat-storage";
+import { type Message, ERROR_MESSAGE, GREETING_MESSAGE } from "./chat";
+import { loadChat, saveChat } from "./chat-storage";
 
 export function useChat() {
   const [messages, setMessages] = useState<Message[]>([

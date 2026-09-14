@@ -1,6 +1,6 @@
 // 웹채팅 기록 저장
 
-import type { Message } from "@/lib/chat";
+import type { Message } from "./chat";
 
 const STORAGE_KEY = "dukjangi:chat";
 
