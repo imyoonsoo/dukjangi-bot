@@ -7,6 +7,7 @@ import { THINKING_MESSAGE } from "@/features/chat/chat";
 import { useChat } from "@/features/chat/useChat";
 import { Header } from "./_components/Header";
 import { CopyButton } from "./_components/CopyButton";
+import { Shortcuts } from "./_components/Shortcuts";
 
 const EXAMPLES = ["교내장학금 뭐 있나요", "ICAN마일리지", "성적우수, 향상"];
 
@@ -162,6 +163,8 @@ export default function Home() {
             전송
           </button>
         </form>
+
+        <Shortcuts />
       </div>
     </main>
   );
