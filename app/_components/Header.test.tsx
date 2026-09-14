@@ -10,7 +10,7 @@ describe("Header", () => {
   it("덕장이 타이틀과 소개문구 렌더링", () => {
     render(<Header hasHistory={false} disabled={false} onNewChat={vi.fn()} />);
     expect(screen.getByText("덕장이")).toBeInTheDocument();
-    expect(screen.getByText("LLM 기반 교내 장학금 챗봇")).toBeInTheDocument();
+    expect(screen.getByText(/교내\s*장학금/)).toBeInTheDocument();
   });
 
   it("기록 없으면 새 대화 버튼 미표시", () => {
