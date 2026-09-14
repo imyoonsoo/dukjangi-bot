@@ -75,6 +75,7 @@ app/
 ├─ _components/      # Header, CopyButton
 └─ api/              # 엔드포인트: 웹(/chat), 카카오(/kakao/skill)
 features/chat/
+├─ chat.ts           # 메시지 타입, 문구 상수
 ├─ persona.ts        # 페르소나
 ├─ scholarship.ts    # 장학금 데이터
 ├─ chat-storage.ts   # 웹채팅 기록 localStorage 저장

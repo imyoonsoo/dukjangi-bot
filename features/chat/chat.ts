@@ -1,4 +1,4 @@
-// 웹채팅 메시지문구
+// 채팅 메시지 타입, 문구 상수
 
 export type Message = { role: "user" | "bot"; text: string };
 
