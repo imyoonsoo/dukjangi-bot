@@ -37,7 +37,7 @@ export default function Home() {
   }, [messages, loading]);
 
   return (
-    <main className="mx-auto flex h-full w-full max-w-2xl flex-col justify-center p-4 sm:p-6">
+    <main className="mx-auto flex h-full w-full max-w-2xl flex-col justify-center p-4 sm:p-6 lg:max-w-3xl">
       <div className="flex max-h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-line bg-white">
         <Header
           hasHistory={hasHistory}
