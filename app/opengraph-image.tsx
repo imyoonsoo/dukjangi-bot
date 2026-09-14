@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-export const alt = "LLM 기반 덕성여대 교내장학금 안내 챗봇";
+export const alt = "LLM 기반 교내 장학금 챗봇";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -98,7 +98,7 @@ export default function Image() {
             marginTop: 22,
           }}
         >
-          LLM 기반 덕성여대 교내장학금 안내 챗봇
+          LLM 기반 교내 장학금 챗봇
         </div>
       </div>
     </div>,
