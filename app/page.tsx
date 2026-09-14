@@ -20,6 +20,7 @@ export default function Home() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const stickToBottom = useRef(true);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // 대화를 따라가는 중인지 기록
   function handleScroll() {
@@ -36,6 +37,14 @@ export default function Home() {
       bottomRef.current?.scrollIntoView();
     }
   }, [messages, loading]);
+
+  // 입력필드 높이 설정
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+    textarea.style.height = "auto";
+    textarea.style.height = `${Math.min(textarea.scrollHeight, 150)}px`;
+  }, [input]);
 
   return (
     <main className="mx-auto flex h-full w-full max-w-2xl flex-col justify-center p-4 sm:p-6 lg:max-w-3xl">
@@ -140,28 +149,39 @@ export default function Home() {
         </div>
 
         <form
-          className="flex gap-2 border-t border-line px-4 py-3"
+          className="border-t border-line px-4 py-3"
           onSubmit={(e) => {
             e.preventDefault();
             sendChat(input);
             setInput("");
           }}
         >
-          <input
-            className="flex-1 rounded-xl border border-line bg-canvas px-4 py-3 text-base outline-none transition placeholder:text-sub/70 focus:border-sky-deep focus:bg-white"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="무엇이 궁금하신가요?"
-            aria-label="질문 입력"
-            disabled={loading}
-          />
-          <button
-            type="submit"
-            className="rounded-xl bg-sky-deep px-5 py-3 text-base font-medium text-white transition hover:bg-navy active:scale-95 disabled:bg-sky-deep/25 disabled:text-white"
-            disabled={loading || !input.trim()}
-          >
-            전송
-          </button>
+          <div className="relative">
+            <textarea
+              ref={textareaRef}
+              rows={1}
+              className="max-h-[150px] w-full resize-none rounded-xl border border-line bg-canvas py-3 pr-16 pl-4 text-base outline-none transition [scrollbar-width:none] placeholder:text-sub/70 focus:border-sky-deep focus:bg-white [&::-webkit-scrollbar]:hidden"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  sendChat(input);
+                  setInput("");
+                }
+              }}
+              placeholder="무엇이 궁금하신가요?"
+              aria-label="질문 입력"
+              disabled={loading}
+            />
+            <button
+              type="submit"
+              className="absolute right-2 bottom-3 rounded-lg bg-sky-deep px-3 py-1.5 text-sm font-medium text-white transition hover:bg-navy active:scale-95 active:bg-navy disabled:bg-sky-deep/25 disabled:text-white"
+              disabled={loading || !input.trim()}
+            >
+              전송
+            </button>
+          </div>
         </form>
 
         <Shortcuts />
