@@ -15,7 +15,7 @@
 }
 
 body {
-  background: #ffffff;
+  background: linear-gradient(160deg, #eaf3fa 0%, #f4f7fa 45%, #ffffff 100%);
   color: var(--color-navy);
   font-family: var(--font-sans);
 }

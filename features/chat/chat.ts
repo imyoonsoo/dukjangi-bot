@@ -9,3 +9,6 @@ export const ERROR_MESSAGE =
 
 export const GREETING_MESSAGE =
   "반가워요, 덕장이예요🙌 받을 수 있는 교내장학금, 놓치지 않게 도와드릴게요.";
+
+export const SCHOLARSHIP_BOARD_URL =
+  "https://www.duksung.ac.kr/bbs/board.do?bsIdx=36&menuId=1059";

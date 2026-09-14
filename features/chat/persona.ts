@@ -1,11 +1,9 @@
 // 덕장이봇 페르소나
 
 import "server-only";
+import { SCHOLARSHIP_BOARD_URL } from "./chat";
 
 export const DATA_AS_OF = "2026년 8월";
-
-export const SCHOLARSHIP_BOARD_URL =
-  "https://www.duksung.ac.kr/bbs/board.do?bsIdx=36&menuId=1059";
 
 export const NOTICE = `이 안내는 ${DATA_AS_OF} 기준 참고용이에요. 교내장학금은 그 해 예산에 따라 신청기한/자격요건/지급금액/일정 등이 달라질 수 있으니, 신청 전 [학교 공식 장학 공지](${SCHOLARSHIP_BOARD_URL})를 확인해주세요.`;
 
