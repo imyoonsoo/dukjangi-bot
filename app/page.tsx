@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { THINKING_MESSAGE } from "@/lib/chat";
-import { useChat } from "@/lib/useChat";
+import { THINKING_MESSAGE } from "@/features/chat/chat";
+import { useChat } from "@/features/chat/useChat";
 import { Header } from "./_components/Header";
 import { CopyButton } from "./_components/CopyButton";
 

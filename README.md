@@ -74,13 +74,14 @@ app/
 ├─ layout.tsx        # 메타데이터
 ├─ _components/      # Header, CopyButton
 └─ api/              # 엔드포인트: 웹(/chat), 카카오(/kakao/skill)
-lib/
-├─ llm.ts            # 웹/카카오 LLM 로직
+features/chat/
 ├─ persona.ts        # 페르소나
 ├─ scholarship.ts    # 장학금 데이터
-├─ kakao.ts          # 카카오 요청/응답 처리
 ├─ chat-storage.ts   # 웹채팅 기록 localStorage 저장
 └─ useChat.ts        # 웹채팅 훅
+lib/
+├─ llm.ts            # 웹/카카오 LLM 로직
+└─ kakao.ts          # 카카오 요청/응답 처리
 ```
 
 <br>
