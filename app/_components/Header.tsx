@@ -25,9 +25,7 @@ export function Header({ hasHistory, disabled, onNewChat }: HeaderProps) {
         <h1 className="text-lg font-semibold tracking-tight text-navy">
           덕장이
         </h1>
-        <p className="text-sm text-sub">
-          LLM 기반 덕성여자대학교 교내장학금 안내 챗봇
-        </p>
+        <p className="text-sm text-sub">LLM 기반 교내 장학금 챗봇</p>
       </div>
       {hasHistory && (
         <button

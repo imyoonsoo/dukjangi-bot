@@ -29,7 +29,7 @@ const OG_DESCRIPTION = "받을 수 있는 교내장학금, 놓치지 않게";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "덕장이봇",
-  description: "LLM 기반 덕성여대 교내장학금 안내 챗봇",
+  description: "LLM 기반 교내 장학금 챗봇",
   openGraph: {
     title: OG_TITLE,
     description: OG_DESCRIPTION,

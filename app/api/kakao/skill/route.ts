@@ -1,7 +1,7 @@
 // 카카오 스킬 웹훅
 import { after } from "next/server";
 import { ask } from "@/lib/llm";
-import { THINKING_MESSAGE } from "@/lib/chat";
+import { THINKING_MESSAGE } from "@/features/chat/chat";
 import {
   extractUtterance,
   extractCallbackUrl,
