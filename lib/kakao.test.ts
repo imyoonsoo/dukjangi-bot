@@ -108,7 +108,7 @@ describe("sendCallback", () => {
     vi.restoreAllMocks();
   });
 
-  it("정상 응답 시 에러표시 X", async () => {
+  it("정상 응답이면 에러 로그 생략", async () => {
     const fetchSpy = vi
       .spyOn(global, "fetch")
       .mockResolvedValue({ ok: true } as Response);
@@ -123,7 +123,7 @@ describe("sendCallback", () => {
     expect(errorSpy).not.toHaveBeenCalled();
   });
 
-  it("4xx/5xx 응답 시 에러표시 O", async () => {
+  it("4xx/5xx 응답이면 에러 로그 기록", async () => {
     vi.spyOn(global, "fetch").mockResolvedValue({
       ok: false,
       status: 500,
@@ -135,7 +135,7 @@ describe("sendCallback", () => {
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining("500"));
   });
 
-  it("fetch 실패해도 예외 X", async () => {
+  it("fetch 자체가 실패해도 정상 처리", async () => {
     vi.spyOn(global, "fetch").mockRejectedValue(new Error("network down"));
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 

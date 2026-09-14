@@ -27,7 +27,7 @@ afterEach(() => {
 });
 
 describe("초기 상태", () => {
-  it("인사말 하나만 있고 기록 없음", () => {
+  it("메시지는 인사말 하나", () => {
     const { result } = renderHook(() => useChat());
     expect(result.current.messages).toEqual([
       { role: "bot", text: GREETING_MESSAGE },
@@ -162,7 +162,7 @@ describe("startChat", () => {
 });
 
 describe("saveChat 연동", () => {
-  it("메시지 바뀌면 저장, 첫 렌더는 저장 X", async () => {
+  it("첫 렌더는 저장 생략, 메시지 변경 시 저장", async () => {
     mockFetchOk("답변");
     const { result } = renderHook(() => useChat());
 

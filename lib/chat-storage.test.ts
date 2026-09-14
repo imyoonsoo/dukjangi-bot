@@ -56,7 +56,7 @@ describe("saveChat", () => {
     expect(localStorage.getItem(STORAGE_KEY)).toBe(JSON.stringify(messages));
   });
 
-  it("인사말만 있으면 저장소 비움", () => {
+  it("인사말만 있으면 저장소 초기화", () => {
     localStorage.setItem(STORAGE_KEY, "기존 데이터");
     saveChat([{ role: "bot", text: "안녕" }]);
     expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
@@ -67,7 +67,7 @@ describe("saveChat", () => {
       vi.restoreAllMocks();
     });
 
-    it("저장 실패해도 예외 X", () => {
+    it("저장 실패해도 정상 처리", () => {
       vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
         throw new Error("quota exceeded");
       });
