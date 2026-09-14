@@ -27,8 +27,8 @@
 
 **배포링크**
 
-- 웹: [dukjangi.vercel.app](https://dukjangi.vercel.app)
-- 카카오톡 채널: [pf.kakao.com/_axkfxaX](http://pf.kakao.com/_axkfxaX/chat)
+- [웹](https://dukjangi.vercel.app)
+- [카카오톡 채널](http://pf.kakao.com/_axkfxaX/chat)
 
 <br>
 
