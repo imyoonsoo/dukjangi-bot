@@ -12,8 +12,11 @@ updates:
     labels: ["dependencies"]
     commit-message:
       prefix: chore
-    # TypeScript 6 이상 요구로 제외
+    # 메이저는 직접 업데이트
     ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+      # TypeScript 6 이상 요구로 제외
       - dependency-name: "@vitest/eslint-plugin"
     # 위 그룹부터 우선 적용
     # 함께 올려야 하는 패키지 묶음
