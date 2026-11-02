@@ -21,7 +21,11 @@ const eslintConfig = defineConfig([
       "testing-library/no-manual-cleanup": "off",
     },
   },
-  // 포맷팅 관련 ESLint 규칙 끄기. 겉모양은 Prettier가 담당. 반드시 맨 마지막.
+  {
+    files: ["app/opengraph-image.tsx"],
+    rules: { "@next/next/no-img-element": "off" },
+  },
+  // Prettier 연동
   prettier,
   // Override default ignores of eslint-config-next.
   globalIgnores([

@@ -47,7 +47,6 @@ export default function Image() {
     >
       {ogImage ? (
         // next/og는 <img>만 지원
-        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={ogImage}
           width={420}
